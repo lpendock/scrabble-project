@@ -4,6 +4,9 @@
 - the 'a' button can be pressed first to enter the letter a to any tile(other letters dont do anything)
 - after every letter entered on tile, dialog popup helps with scoring 
 - other minor things + code is still very messy
+# Master status
+-includes client-server branch(sept 29)
+-includes voting branch(sept 29)
 # UPDATES
 - added alphabet bag class and logic to gui(initial hand, drawing more letters)
 - using concurrent hashmap for bag
