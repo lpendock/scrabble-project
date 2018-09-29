@@ -41,6 +41,10 @@ public class board extends JPanel {
 	private final JButton btnNewButton_4 = new JButton("e");
 	private final JButton btnNewButton_5 = new JButton("f");
 	private final JButton btnNewButton_6 = new JButton("g");
+
+	// Button to initiate vote
+	private final JButton voteButton = new JButton("vote");
+
 	AlphabetBag bag;
 	ArrayList<String> hand = new ArrayList<String>();
 	JButton tileChosen;
@@ -162,7 +166,6 @@ public class board extends JPanel {
             	tileChosen = btnNewButton_6;
             }
 			});
-	
 	}
 
 	private void initGrid() {

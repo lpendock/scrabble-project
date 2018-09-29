@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b780ecd2-7afd-498e-bc4e-9e05f4102be7" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/src/scrabble/Vote.java" afterPath="$PROJECT_DIR$/src/scrabble/Vote.java" />
+      <change beforePath="$PROJECT_DIR$/src/scrabble/board.java" afterPath="$PROJECT_DIR$/src/scrabble/board.java" />
     </list>
     <ignored path="$PROJECT_DIR$/bin/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -17,8 +18,18 @@
       <file leaf-file-name="AlphabetBag.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/scrabble/AlphabetBag.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="92">
+            <state relative-caret-position="-1083">
               <caret line="7" column="13" lean-forward="false" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MembersMenu.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/scrabble/MembersMenu.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="828">
+              <caret line="47" column="15" lean-forward="true" selection-start-line="47" selection-start-column="15" selection-end-line="47" selection-end-column="15" />
               <folding />
             </state>
           </provider>
@@ -27,12 +38,22 @@
       <file leaf-file-name="board.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/scrabble/board.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="801">
-              <caret line="268" column="5" lean-forward="false" selection-start-line="268" selection-start-column="5" selection-end-line="268" selection-end-column="5" />
+            <state relative-caret-position="3703">
+              <caret line="161" column="41" lean-forward="false" selection-start-line="161" selection-start-column="41" selection-end-line="161" selection-end-column="41" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <marker date="1538212118919" expanded="true" signature="7659:7662" ph="{...}" />
+                <marker date="1538218642427" expanded="true" signature="7744:7747" ph="{...}" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Vote.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/scrabble/Vote.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-344">
+              <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -40,11 +61,21 @@
       <file leaf-file-name="GUI_main.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/scrabble/GUI_main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="778">
-              <caret line="66" column="5" lean-forward="false" selection-start-line="66" selection-start-column="5" selection-end-line="66" selection-end-column="5" />
+            <state relative-caret-position="-719">
+              <caret line="27" column="25" lean-forward="false" selection-start-line="27" selection-start-column="15" selection-end-line="27" selection-end-column="25" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Login.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/scrabble/Login.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-207">
+              <caret line="21" column="24" lean-forward="false" selection-start-line="21" selection-start-column="21" selection-end-line="21" selection-end-column="24" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -57,6 +88,11 @@
         <option value="Class" />
       </list>
     </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>changePanel</find>
+    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -73,12 +109,13 @@
         <option value="$PROJECT_DIR$/src/scrabble/voting.java" />
         <option value="$PROJECT_DIR$/src/scrabble/vote.java" />
         <option value="$PROJECT_DIR$/src/scrabble/Vote.java" />
+        <option value="$PROJECT_DIR$/src/scrabble/board.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="105" />
-    <option name="y" value="8" />
+    <option name="x" value="126" />
+    <option name="y" value="28" />
     <option name="width" value="1688" />
     <option name="height" value="1008" />
   </component>
@@ -295,7 +332,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="105" y="8" width="1688" height="1008" extended-state="0" />
+    <frame x="126" y="28" width="1688" height="1008" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="PlantUML" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -308,7 +345,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32912844" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28440368" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -336,24 +373,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/scrabble/Vote.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="17" column="23" lean-forward="false" selection-start-line="17" selection-start-column="23" selection-end-line="17" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/scrabble/board.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3611">
-          <caret line="175" column="5" lean-forward="false" selection-start-line="175" selection-start-column="5" selection-end-line="175" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <marker date="1538212118919" expanded="true" signature="7659:7662" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/scrabble/GUI_main.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="690">
@@ -424,7 +443,7 @@
           <caret line="175" column="5" lean-forward="false" selection-start-line="175" selection-start-column="5" selection-end-line="175" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
-            <marker date="1538212118919" expanded="true" signature="7659:7662" ph="{...}" />
+            <marker date="1538218642427" expanded="true" signature="7744:7747" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -476,7 +495,7 @@
           <caret line="175" column="5" lean-forward="false" selection-start-line="175" selection-start-column="5" selection-end-line="175" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
-            <marker date="1538212118919" expanded="true" signature="7659:7662" ph="{...}" />
+            <marker date="1538218642427" expanded="true" signature="7744:7747" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -512,7 +531,7 @@
           <caret line="175" column="5" lean-forward="false" selection-start-line="175" selection-start-column="5" selection-end-line="175" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
-            <marker date="1538212118919" expanded="true" signature="7659:7662" ph="{...}" />
+            <marker date="1538218642427" expanded="true" signature="7744:7747" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -530,7 +549,7 @@
           <caret line="175" column="5" lean-forward="false" selection-start-line="175" selection-start-column="5" selection-end-line="175" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
-            <marker date="1538212118919" expanded="true" signature="7659:7662" ph="{...}" />
+            <marker date="1538218642427" expanded="true" signature="7744:7747" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -587,7 +606,7 @@
           <caret line="268" column="5" lean-forward="false" selection-start-line="268" selection-start-column="5" selection-end-line="268" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
-            <marker date="1538212118919" expanded="true" signature="7659:7662" ph="{...}" />
+            <marker date="1538218642427" expanded="true" signature="7744:7747" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -649,7 +668,7 @@
           <caret line="175" column="5" lean-forward="false" selection-start-line="175" selection-start-column="5" selection-end-line="175" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
-            <marker date="1538212118919" expanded="true" signature="7659:7662" ph="{...}" />
+            <marker date="1538218642427" expanded="true" signature="7744:7747" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -667,7 +686,7 @@
           <caret line="175" column="5" lean-forward="false" selection-start-line="175" selection-start-column="5" selection-end-line="175" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
-            <marker date="1538212118919" expanded="true" signature="7659:7662" ph="{...}" />
+            <marker date="1538218642427" expanded="true" signature="7744:7747" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -726,24 +745,41 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/scrabble/Vote.java">
+    <entry file="file://$PROJECT_DIR$/src/scrabble/Login.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1725">
-          <caret line="75" column="29" lean-forward="true" selection-start-line="75" selection-start-column="29" selection-end-line="75" selection-end-column="29" />
+        <state relative-caret-position="-207">
+          <caret line="21" column="24" lean-forward="false" selection-start-line="21" selection-start-column="21" selection-end-line="21" selection-end-column="24" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/scrabble/Login.java">
+    <entry file="jar://F:/Java/jdk1.8.0_181/src.zip!/java/awt/Container.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="23">
-          <caret line="19" column="13" lean-forward="false" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
+        <state relative-caret-position="682">
+          <caret line="1619" column="16" lean-forward="false" selection-start-line="1619" selection-start-column="16" selection-end-line="1619" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scrabble/Vote.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-344">
+          <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scrabble/MembersMenu.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="828">
+          <caret line="47" column="15" lean-forward="true" selection-start-line="47" selection-start-column="15" selection-end-line="47" selection-end-column="15" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/scrabble/AlphabetBag.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="92">
+        <state relative-caret-position="-1083">
           <caret line="7" column="13" lean-forward="false" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
           <folding />
         </state>
@@ -751,19 +787,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/scrabble/board.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="801">
-          <caret line="268" column="5" lean-forward="false" selection-start-line="268" selection-start-column="5" selection-end-line="268" selection-end-column="5" />
+        <state relative-caret-position="3703">
+          <caret line="161" column="41" lean-forward="false" selection-start-line="161" selection-start-column="41" selection-end-line="161" selection-end-column="41" />
           <folding>
             <element signature="imports" expanded="true" />
-            <marker date="1538212118919" expanded="true" signature="7659:7662" ph="{...}" />
+            <marker date="1538218642427" expanded="true" signature="7744:7747" ph="{...}" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/scrabble/GUI_main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="778">
-          <caret line="66" column="5" lean-forward="false" selection-start-line="66" selection-start-column="5" selection-end-line="66" selection-end-column="5" />
+        <state relative-caret-position="-719">
+          <caret line="27" column="25" lean-forward="false" selection-start-line="27" selection-start-column="15" selection-end-line="27" selection-end-column="25" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
