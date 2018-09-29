@@ -1,22 +1,20 @@
 package scrabble;
 
-import javax.swing.JPanel;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
-import java.awt.FlowLayout;
-import javax.swing.JTabbedPane;
+
 
 public class board extends JPanel {
 	 
@@ -43,18 +41,41 @@ public class board extends JPanel {
 	private final JButton btnNewButton_4 = new JButton("e");
 	private final JButton btnNewButton_5 = new JButton("f");
 	private final JButton btnNewButton_6 = new JButton("g");
+	AlphabetBag bag;
+	ArrayList<String> hand = new ArrayList<String>();
+	JButton tileChosen;
+	private GUI_main gui;
+
 	
 	/**
 	 * Create the panel.
+	 * @param gui_main 
 	 */
-	public board(int players) {
+	public board(int players, GUI_main gui_main) {
 		setLayout(new BorderLayout());
 		this.players = players;
+		gui = gui_main;
+		//create the bag and draw first hand.
+		//this can be changed where a client has to send a request or something
+		this.bag = new AlphabetBag();
+		this.hand = bag.firstDraw();
+		initHand();
 		scores = new JLabel[players];
 		initGUI();
 		setVisible(true);
 	
 	}
+	//start first hand(display correct letters)
+	private void initHand() {
+		btnNewButton.setText(hand.get(0));
+		btnNewButton_1.setText(hand.get(1));
+		btnNewButton_2.setText(hand.get(2));
+		btnNewButton_3.setText(hand.get(3));
+		btnNewButton_4.setText(hand.get(4));
+		btnNewButton_5.setText(hand.get(5));
+		btnNewButton_6.setText(hand.get(6));
+	}
+	
 	private void initGUI() {
 		initGrid();
 		initScorePanel();
@@ -68,7 +89,9 @@ public class board extends JPanel {
 	private void initScorePanel() {
 		scorePanel.setLayout(new GridLayout(1, players));
 		for (int row = 0; row < players; row++) {	
-			JLabel label = new JLabel("Player "+row+":");
+			//Can use arraylist or whatever to save all player names
+			//For now just uses one player
+			JLabel label = new JLabel(gui.getPlayer()+":");
 			scores[row] =label;
 			scorePanel.add(label);
 		}
@@ -82,20 +105,63 @@ public class board extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
             	setLetter = btnNewButton.getText();
+            	tileChosen = btnNewButton;
             }
 			});
 		
 		rackPanel.add(btnNewButton_1);
+		btnNewButton_1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	setLetter = btnNewButton_1.getText();
+            	tileChosen = btnNewButton_1;
+            }
+			});
 		
 		rackPanel.add(btnNewButton_2);
+		btnNewButton_2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	setLetter = btnNewButton_2.getText();
+            	tileChosen = btnNewButton_2;
+            }
+			});
 		
 		rackPanel.add(btnNewButton_3);
+		btnNewButton_3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	setLetter = btnNewButton_3.getText();
+            	tileChosen = btnNewButton_3;
+            }
+			});
 		
 		rackPanel.add(btnNewButton_4);
-		
-		rackPanel.add(btnNewButton_6);
+		btnNewButton_4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	setLetter = btnNewButton_4.getText();
+            	tileChosen = btnNewButton_4;
+            }
+			});
 		
 		rackPanel.add(btnNewButton_5);
+		btnNewButton_5.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	setLetter = btnNewButton_5.getText();
+            	tileChosen = btnNewButton_5;
+            }
+			});
+		
+		rackPanel.add(btnNewButton_6);
+		btnNewButton_6.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	setLetter = btnNewButton_6.getText();
+            	tileChosen = btnNewButton_6;
+            }
+			});
 	
 	}
 
@@ -106,6 +172,7 @@ public class board extends JPanel {
 				//Square square = board.getSquare(row, column);
 				JPanel panel = new JPanel();
 				JButton button = new JButton();
+				//Row and column number can be sent to other players when it updates
 				final int rownum = row;
 				final int columnnum = column;
 				button.addActionListener(new ActionListener() {
@@ -116,6 +183,7 @@ public class board extends JPanel {
 	            	if(button.getText() == "" && setLetter != "") {
 	            		button.setText(setLetter);
 	            		setLetter = "";
+	            		newTile(tileChosen);
 	            		checkScore(rownum,columnnum);
 	            	}
 	            }
@@ -134,8 +202,12 @@ public class board extends JPanel {
 	}
 
 	
+	public void newTile(JButton tile) {
+		String letter = bag.getLetter();
+		tile.setText(letter);
+	}
 
-
+	//Can be used to update board when we implement that
 	public void updateBoard() {
 		for (int row = 0; row < 20; row++) {
 			for (int column = 0; column < 20; column++) {
@@ -169,9 +241,30 @@ public class board extends JPanel {
                 null, words,
                 word1);
 
-		//If a string was returned, say so.
-		int score = s.length();
-		scores[0].setText("player 0:"+score);
-		System.out.println(score);
+		
+		//TEMP trying out of voting
+		//default icon, custom title
+		Vote vote = new Vote(gui.getPlayers());
+		int n = JOptionPane.showConfirmDialog(
+		    this,
+		    "Is this a Word?",
+		    "Voting Process",
+		    JOptionPane.YES_NO_OPTION);
+		System.out.println(n);
+		if(n == 1) {
+			vote.voteNo();
+		}else {
+			vote.voteYes();
+		}
+		vote.votingCompleted();
+		boolean check = vote.getResult();
+		if (check == true) {
+			int score = s.length();
+			scores[0].setText(gui.getPlayer()+":"+score);
+			System.out.println(score);
+		}else {
+			JOptionPane.showMessageDialog(this, "Error", "Vote failed", n);
+		}
+		
 	}
 }
