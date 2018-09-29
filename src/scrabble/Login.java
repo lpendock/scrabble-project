@@ -19,7 +19,6 @@ import javax.swing.JMenuBar;
 
 public class Login extends JPanel {
 	private JTextField textField;
-	private JTextField textField_1;
 	private GUI_main gui;
 
 	/**
@@ -36,21 +35,15 @@ public class Login extends JPanel {
 		add(textField);
 		textField.setColumns(10);
 		
-		JLabel lblNewLabel_1 = new JLabel("Players");
-		add(lblNewLabel_1);
-		
-		textField_1 = new JTextField();
-		add(textField_1);
-		textField_1.setColumns(10);
-		
 		JButton btnNewButton = new JButton("submit");
 		btnNewButton.setHorizontalAlignment(SwingConstants.LEADING);
 		add(btnNewButton);
 		  btnNewButton.addActionListener(new ActionListener() {
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
-	            	gui.setPlayers(Integer.parseInt(textField_1.getText()));
-	            	gui.changePanel(2);
+	            	//gui.setPlayers(Integer.parseInt(textField_1.getText()));
+	            	gui.setPlayer(textField.getText());
+	            	gui.changePanel(3);
 	                
 	            }
 	        });

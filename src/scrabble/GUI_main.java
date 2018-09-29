@@ -14,7 +14,16 @@ public class GUI_main extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	int players = 2;
+	int players = 1;
+	String player= "";
+
+	public String getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(String player) {
+		this.player = player;
+	}
 
 	public int getPlayers() {
 		return players;
@@ -28,6 +37,7 @@ public class GUI_main extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -57,9 +67,17 @@ public class GUI_main extends JFrame {
 	}
 	
 	public void changePanel(int num) {
+		//TEMP solution(probably) decide which panel do display based on pre-defined numbers
+		// 2 = board
+		// 3 = membersMenu
 		if (num == 2) {
-			board board = new board(players);
+			board board = new board(players,this);
 			setContentPane(board);
+			validate();
+		}
+		else if(num == 3) {
+			MembersMenu menu = new MembersMenu(this);
+			setContentPane(menu);
 			validate();
 		}
 	}
