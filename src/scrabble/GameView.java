@@ -6,8 +6,6 @@ import java.awt.*;
 public class GameView extends JFrame{
 
 
-    private static final int DEFAULT_WIDTH = 1000;
-    private static final int DEFAULT_HEIGHT = 9000;
 
     private board gameBoard;
     private AlphabetPanel alphabetPanel;
@@ -28,19 +26,18 @@ public class GameView extends JFrame{
     }
 
     public GameView() {
-        this.setLayout(new BorderLayout());
+
 
         this.alphabetPanel = new AlphabetPanel(this);
         this.gameBoard = new board(this.alphabetPanel);
         JPanel parentPanel = new JPanel();
-        parentPanel.add(this.gameBoard, BorderLayout.NORTH);
+        parentPanel.setLayout(new BorderLayout());
+        parentPanel.add(this.gameBoard, BorderLayout.CENTER);
         parentPanel.add(this.alphabetPanel, BorderLayout.SOUTH);
         this.getContentPane().add(parentPanel);
         this.pack();
     }
 
 
-    public Dimension getPreferredSize() {
-        return new Dimension(DEFAULT_WIDTH, DEFAULT_WIDTH);
-    }
+
 }

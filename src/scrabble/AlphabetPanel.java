@@ -40,7 +40,7 @@ public class AlphabetPanel extends JPanel{
      * @return
      */
     public Dimension getPreferredSize() {
-        return new Dimension(DEFAULT_WIDTH, DEFAULT_WIDTH);
+        return new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     }
 
     public AlphabetPanel(GameView gameView) {
@@ -88,7 +88,7 @@ public class AlphabetPanel extends JPanel{
 
 
     private void initRackPanel() {
-        rackPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+//        rackPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
         rackPanel.add(btnNewButton);
         btnNewButton.addActionListener(new ActionListener() {
