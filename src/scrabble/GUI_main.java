@@ -77,6 +77,8 @@ public class GUI_main extends JFrame {
 			// show gameView
 			gameView.setTitle("Scrabble");
 			gameView.setVisible(true);
+			gameView.addMember(player);
+			gameView.initInfoBoard();
 			// hide the main GUI
 			this.setVisible(false);
 			validate();

@@ -1,5 +1,7 @@
 package scrabble;
 
+import com.sun.xml.internal.ws.api.streaming.XMLStreamReaderFactory;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,7 +39,7 @@ public class board extends JPanel {
 	private static final int DEFAULT_WIDTH = 800;
 	private static final int DEFAULT_HEIGHT = 800;
 	private AlphabetPanel alphabetPanel;
-
+	private GameView gameView;
 	// Button to initiate vote
 	private final JButton voteButton = new JButton("vote");
 
@@ -53,8 +55,9 @@ public class board extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public board(AlphabetPanel alphabetPanel) {
-		this.alphabetPanel = alphabetPanel;
+	public board(GameView gameView) {
+		this.gameView = gameView;
+		this.alphabetPanel = gameView.getAlphabetPanel();
 		setLayout(new BorderLayout());
 		this.players = players;
 		this.playerNums = 4;
@@ -65,7 +68,10 @@ public class board extends JPanel {
 
 		scores = new JLabel[players];
 		initGUI();
-		this.setBorder(new LineBorder(Color.BLACK));
+
+		// set some padding between other components
+		this.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
 		setVisible(true);
 	
 	}
@@ -105,7 +111,7 @@ public class board extends JPanel {
 				JPanel panel = new JPanel();
 				JButton button = new JButton();
 
-				button.setFont(new Font("Arial", Font.BOLD, 23));
+				button.setFont(new Font("Arial", Font.BOLD, 20));
 
 				//Row and column number can be sent to other players when it updates
 				final int rownum = row;
@@ -113,8 +119,8 @@ public class board extends JPanel {
 				button.addActionListener(new ActionListener() {
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
-	            	JOptionPane.showMessageDialog(panel,
-	            		    "grid location:"+rownum+columnnum);
+//	            	JOptionPane.showMessageDialog(panel,
+//	            		    "grid location:"+rownum+columnnum);
 
 					if (alphabetPanel.getTheChosenTile() != null) {
 						setLetter = alphabetPanel.getTheChosenTile().getText();
@@ -122,7 +128,6 @@ public class board extends JPanel {
 
 	            	if(button.getText().equals("") && !setLetter.equals("")) {
 	            		button.setText(setLetter);
-						System.out.println("button recieved: " + alphabetPanel.getTheChosenTile().getText());
 	            		setLetter = "";
 	            		alphabetPanel.setNewTile();
 
@@ -184,7 +189,17 @@ public class board extends JPanel {
 		
 		//TEMP trying out of voting
 		//default icon, custom title
-		Vote vote = new Vote(playerNums);
+		int voteOrNot = JOptionPane.showConfirmDialog(
+				this,
+				"Do you want to vote for this word?",
+				"Voting Process",
+				JOptionPane.YES_NO_OPTION);
+
+		if (voteOrNot == JOptionPane.NO_OPTION) return;
+
+		// Single player should not vote in reality
+		// Just do this for testing
+		Vote vote = new Vote(2);
 		int n = JOptionPane.showConfirmDialog(
 		    this,
 		    "Is this a Word?",
@@ -196,14 +211,16 @@ public class board extends JPanel {
 		}else {
 			vote.voteYes();
 		}
-		vote.votingCompleted();
-		boolean check = vote.getResult();
-		if (check == true) {
-			int score = s.length();
+		if (vote.votingCompleted()) {
+
+			if (vote.getResult() == true){
+				int score = s.length();
+				gameView.getGameInfoBoard().updateScore(gameView.getCurrentPlayer(), score);
 //			scores[0].setText(gui.getPlayer()+":"+score);
-			System.out.println(score);
-		}else {
-			JOptionPane.showMessageDialog(this, "Error", "Vote failed", n);
+				System.out.println(score);
+			}else{
+				JOptionPane.showMessageDialog(this, "Error", "Vote failed", n);
+			}
 		}
 		
 	}
