@@ -119,8 +119,6 @@ public class board extends JPanel {
 				button.addActionListener(new ActionListener() {
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
-//	            	JOptionPane.showMessageDialog(panel,
-//	            		    "grid location:"+rownum+columnnum);
 
 					if (alphabetPanel.getTheChosenTile() != null) {
 						setLetter = alphabetPanel.getTheChosenTile().getText();
@@ -162,30 +160,66 @@ public class board extends JPanel {
 }
 	}
 
-
-	public void checkScore(int rownum,int columnnum) {    
-		String word1 = "";
-		String word2 = "";
-		for (int row = 0; row < 20; row++) {
-			if (grid[row][columnnum].getText() != "" ) {
-				word1 = word1 + grid[row][columnnum].getText();
-			}
-		}
-		for (int column = 0; column < 20; column++) {
-			if (grid[rownum][column].getText() != "" ) {
-				word2 = word2 + grid[rownum][column].getText();
-			}
-		}
-		String[] words = {word1,word2};
+	/**
+	 * we check characters that adjacent to the the chosen tile from
+	 * four directions: up, down, left, right.
+	 * @param rowNum
+	 * @param columnNum
+	 */
+	public void checkScore(int rowNum,int columnNum) {
 
 		int voteOrNot = JOptionPane.showConfirmDialog(
 				this,
-				"Do you want to vote for this word?",
-				"Voting Process",
+				"Is this a word?",
+				"confirm",
 				JOptionPane.YES_NO_OPTION);
 
 		if (voteOrNot == JOptionPane.NO_OPTION) return;
 
+		// The chosen tile is the starting point.
+		// There is only two cases: the word may be in the same row
+		// or in the same column.
+		String columnWord = grid[rowNum][columnNum].getText();
+		String rowWord = grid[rowNum][columnNum].getText();
+
+		// Select characters below the target tile
+		for (int row = rowNum + 1; row < 20; row++) {
+			if (!grid[row][columnNum].getText().equals("") ) {
+				columnWord = columnWord + grid[row][columnNum].getText();
+			} else {
+				break;
+			}
+		}
+
+		// Select characters above the target tile
+		for (int row = rowNum - 1; row > 0; row--) {
+			if (!grid[row][columnNum].getText().equals("") ) {
+				columnWord = grid[row][columnNum].getText() + columnWord;
+			} else {
+				break;
+			}
+		}
+
+		// Select characters on the right of the target tile
+		for (int column = columnNum + 1; column < 20; column++) {
+			if (!grid[rowNum][column].getText().equals("") ) {
+				rowWord = rowWord + grid[rowNum][column].getText();
+			} else {
+				break;
+			}
+		}
+
+		// Select characters on the left of the target tile
+		for (int column = columnNum - 1; column > 0; column--) {
+			if (!grid[rowNum][column].getText().equals("") ) {
+				rowWord = grid[rowNum][column].getText() + rowWord;
+			} else {
+				break;
+			}
+		}
+
+
+		String[] words = {rowWord,columnWord};
 
 		String s = (String)JOptionPane.showInputDialog(
                 this,
@@ -194,7 +228,7 @@ public class board extends JPanel {
                 "Customized Dialog",
                 JOptionPane.PLAIN_MESSAGE,
                 null, words,
-                word1);
+				words[0]);
 
 		
 		//TEMP trying out of voting
@@ -206,7 +240,7 @@ public class board extends JPanel {
 		Vote vote = new Vote(2);
 		int n = JOptionPane.showConfirmDialog(
 		    this,
-		    "Is this a Word?",
+		    "Do you accept this Word?",
 		    "Voting Process",
 		    JOptionPane.YES_NO_OPTION);
 		System.out.println(n);
