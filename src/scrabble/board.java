@@ -170,13 +170,23 @@ public class board extends JPanel {
 			if (grid[row][columnnum].getText() != "" ) {
 				word1 = word1 + grid[row][columnnum].getText();
 			}
-	}
+		}
 		for (int column = 0; column < 20; column++) {
 			if (grid[rownum][column].getText() != "" ) {
 				word2 = word2 + grid[rownum][column].getText();
 			}
-	}
+		}
 		String[] words = {word1,word2};
+
+		int voteOrNot = JOptionPane.showConfirmDialog(
+				this,
+				"Do you want to vote for this word?",
+				"Voting Process",
+				JOptionPane.YES_NO_OPTION);
+
+		if (voteOrNot == JOptionPane.NO_OPTION) return;
+
+
 		String s = (String)JOptionPane.showInputDialog(
                 this,
                 "Words found are:\n"
@@ -189,13 +199,7 @@ public class board extends JPanel {
 		
 		//TEMP trying out of voting
 		//default icon, custom title
-		int voteOrNot = JOptionPane.showConfirmDialog(
-				this,
-				"Do you want to vote for this word?",
-				"Voting Process",
-				JOptionPane.YES_NO_OPTION);
 
-		if (voteOrNot == JOptionPane.NO_OPTION) return;
 
 		// Single player should not vote in reality
 		// Just do this for testing
