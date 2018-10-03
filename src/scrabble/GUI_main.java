@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
@@ -43,6 +44,21 @@ public class GUI_main extends JFrame {
 				try {
 					GUI_main frame = new GUI_main();
 					frame.setVisible(true);
+					frame.addWindowListener(new java.awt.event.WindowAdapter() {
+					    @Override
+					    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+					        if (JOptionPane.showConfirmDialog(frame, 
+					            "Are you sure you want to close this window?", "Close Window?", 
+					            JOptionPane.YES_NO_OPTION,
+					            JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
+					        	//can send info to whatever before exit
+					        	int exiting = 1;
+					        	System.out.println("exiting");
+					            System.exit(0);
+					        }
+					    }
+					});
+					frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -54,7 +70,7 @@ public class GUI_main extends JFrame {
 	 * Create the frame.
 	 */
 	public GUI_main() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//Toolkit tk = Toolkit.getDefaultToolkit();
 		//Dimension screenSize = tk.getScreenSize();
 		//setLocation(screenSize.width / 2, screenSize.height / 2);
@@ -66,6 +82,7 @@ public class GUI_main extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(login);
+		
 	}
 	
 	public void changePanel(int num) {
