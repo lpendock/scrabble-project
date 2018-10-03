@@ -26,7 +26,7 @@ public class AlphabetPanel extends JPanel{
     private final JButton btnNewButton_6 = new JButton("g");
 
     private AlphabetBag alphabetBag;
-    private GameView gameView;
+    private Game game;
     private JButton tileChosen;
     String setLetter = "";
 
@@ -43,8 +43,8 @@ public class AlphabetPanel extends JPanel{
         return new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     }
 
-    public AlphabetPanel(GameView gameView) {
-        this.gameView = gameView;
+    public AlphabetPanel(Game game) {
+        this.game = game;
         this.alphabetBag = new AlphabetBag();
         this.hand = alphabetBag.firstDraw();
 

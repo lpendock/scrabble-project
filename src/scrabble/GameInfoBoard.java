@@ -25,7 +25,7 @@ public class GameInfoBoard extends JPanel{
     }
 
 
-    GameInfoBoard (GameView gameView) {
+    GameInfoBoard (Game game) {
         setLayout(new BorderLayout());
 
         playerListPanel.setLayout( new GridLayout(8,1));
@@ -44,7 +44,7 @@ public class GameInfoBoard extends JPanel{
         setBorder(BorderFactory.createEmptyBorder(10, 10, 200, 30));
 
         this.playerScoreMap = new HashMap<>();
-        this.members = gameView.getMembers();
+        this.members = game.getMembers();
 
     }
 

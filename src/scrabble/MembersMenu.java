@@ -5,11 +5,9 @@ import javax.swing.JLabel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JTextPane;
 import javax.swing.JList;
 import javax.swing.SwingConstants;
 
@@ -19,14 +17,14 @@ public class MembersMenu extends JPanel {
 	//ArrayList<String> members = new ArrayList<String>();
 	DefaultListModel<String> members = new DefaultListModel<>();
 	String membersDisplay = "";
-	private GUI_main gui;
+	private Main gui;
 	JList list;
 	/**
 	 * Create the panel.
-	 * @param gui_main 
+	 * @param main
 	 */
-	public MembersMenu(GUI_main gui_main) {
-		gui = gui_main;
+	public MembersMenu(Main main) {
+		gui = main;
 		JLabel lblMembers = new JLabel("Members:");
 		lblMembers.setHorizontalAlignment(SwingConstants.CENTER);
 		add(lblMembers);

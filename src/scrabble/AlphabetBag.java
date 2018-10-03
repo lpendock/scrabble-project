@@ -55,9 +55,9 @@ public class AlphabetBag {
 				int num = map.get(letter);
 				map.put(letter, num-1);
 				hand.add(letter);
-				System.out.println(letter);
+
 			}
-			System.out.println(map);
+
 			return hand;
 			
 		}

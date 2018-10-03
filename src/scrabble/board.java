@@ -39,7 +39,7 @@ public class board extends JPanel {
 	private static final int DEFAULT_WIDTH = 800;
 	private static final int DEFAULT_HEIGHT = 800;
 	private AlphabetPanel alphabetPanel;
-	private GameView gameView;
+	private Game game;
 	// Button to initiate vote
 	private final JButton voteButton = new JButton("vote");
 
@@ -55,9 +55,9 @@ public class board extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public board(GameView gameView) {
-		this.gameView = gameView;
-		this.alphabetPanel = gameView.getAlphabetPanel();
+	public board(Game game) {
+		this.game = game;
+		this.alphabetPanel = game.getAlphabetPanel();
 		setLayout(new BorderLayout());
 		this.players = players;
 		this.playerNums = 4;
@@ -125,10 +125,10 @@ public class board extends JPanel {
 					}
 
 	            	if(button.getText().equals("") && !setLetter.equals("")) {
-	            		button.setText(setLetter);
-	            		setLetter = "";
+						button.setText(setLetter);
 	            		alphabetPanel.setNewTile();
-
+						game.notifyBoardChanges(0,0,setLetter);
+						setLetter = "";
 	            		checkScore(rownum,columnnum);
 	            	}
 	            }
@@ -151,13 +151,8 @@ public class board extends JPanel {
 
 
 	//Can be used to update board when we implement that
-	public void updateBoard() {
-		for (int row = 0; row < 20; row++) {
-			for (int column = 0; column < 20; column++) {
-				//JLabel label = grid[row][column];
-			
-		}
-}
+	public void updateBoard(int rowNum,int columnNum, String letter) {
+		grid[rowNum][columnNum].setText(letter);
 	}
 
 	/**
@@ -243,7 +238,7 @@ public class board extends JPanel {
 		    "Do you accept this Word?",
 		    "Voting Process",
 		    JOptionPane.YES_NO_OPTION);
-		System.out.println(n);
+
 		if(n == 1) {
 			vote.voteNo();
 		}else {
@@ -253,7 +248,7 @@ public class board extends JPanel {
 
 			if (vote.getResult() == true){
 				int score = s.length();
-				gameView.getGameInfoBoard().updateScore(gameView.getCurrentPlayer(), score);
+				game.getGameInfoBoard().updateScore(game.getCurrentPlayer(), score);
 //			scores[0].setText(gui.getPlayer()+":"+score);
 				System.out.println(score);
 			}else{
