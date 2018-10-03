@@ -6,19 +6,13 @@ import java.util.ArrayList;
 
 public class Game extends JFrame{
 
-
-
     private board gameBoard;
     private Main main;
-
     private AlphabetPanel alphabetPanel;
     private GameInfoBoard gameInfoBoard;
-    private ArrayList<String> members;
-    private String currentPlayer;
 
     public Game(Main main) {
 
-        this.members = new ArrayList<>();
 
         this.alphabetPanel = new AlphabetPanel(this);
         this.gameBoard = new board(this);
@@ -38,10 +32,25 @@ public class Game extends JFrame{
 
     public void notifyBoardChanges(int rowNum,int columnNum, String letter) {
         if (main.isHost()) {
-            this.main.server.sendMessageToAll("board has been added with: " + letter);
-            System.out.println("notification sent");
+            this.main.server.sendMessageToAll("updateBoard#" +rowNum + "#"+ columnNum + "#" + letter);
+            System.out.println("host notification sent");
+        } else {
+            this.main.client.sendToServer("updateBoard#" +rowNum + "#"+ columnNum + "#" + letter);
+            System.out.println("client notification sent");
         }
     }
+
+
+    public void notifySocreChanges(){
+
+
+    }
+
+
+    public board getGameBoard() {
+        return gameBoard;
+    }
+
 
 
     public AlphabetPanel getAlphabetPanel() {
@@ -56,17 +65,13 @@ public class Game extends JFrame{
         this.gameInfoBoard.initPlayerInfo();
     }
 
-    // this is hard coded for now
+
     public String getCurrentPlayer() {
-        return currentPlayer;
+        return main.getPlayer();
     }
 
-    public void addMember(String memberName) {
-        members.add(memberName);
-        this.currentPlayer = members.get(0);
+    public ArrayList<String> getMembersList() {
+        return main.getMemberList();
     }
 
-    public ArrayList<String> getMembers() {
-        return members;
-    }
 }

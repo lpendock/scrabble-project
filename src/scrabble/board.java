@@ -114,8 +114,8 @@ public class board extends JPanel {
 				button.setFont(new Font("Arial", Font.BOLD, 20));
 
 				//Row and column number can be sent to other players when it updates
-				final int rownum = row;
-				final int columnnum = column;
+				final int rowNum = row;
+				final int columnNum = column;
 				button.addActionListener(new ActionListener() {
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
@@ -127,9 +127,9 @@ public class board extends JPanel {
 	            	if(button.getText().equals("") && !setLetter.equals("")) {
 						button.setText(setLetter);
 	            		alphabetPanel.setNewTile();
-						game.notifyBoardChanges(0,0,setLetter);
+						game.notifyBoardChanges(rowNum,columnNum,setLetter);
 						setLetter = "";
-	            		checkScore(rownum,columnnum);
+	            		checkScore(rowNum,columnNum);
 	            	}
 	            }
 				});

@@ -10,13 +10,13 @@ public class GameInfoBoard extends JPanel{
 
     JLabel playerName;
     JLabel score;
-    JPanel panel = new JPanel();
     JPanel playerListPanel = new JPanel();
     JPanel scoreListPanel = new JPanel();
 
     private static final int DEFAULT_WIDTH = 200;
     private static final int DEFAULT_HEIGHT = 400;
 
+    private Game game;
     private ArrayList<String> members;
     private HashMap<String, JLabel> playerScoreMap;
 
@@ -44,11 +44,12 @@ public class GameInfoBoard extends JPanel{
         setBorder(BorderFactory.createEmptyBorder(10, 10, 200, 30));
 
         this.playerScoreMap = new HashMap<>();
-        this.members = game.getMembers();
+        this.game = game;
 
     }
 
     public void initPlayerInfo() {
+        this.members = game.getMembersList();
         for (int i = 0; i < members.size(); i ++) {
             playerListPanel.add(new JLabel(members.get(i)));
             JLabel score = new JLabel("0");

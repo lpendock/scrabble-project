@@ -6,42 +6,28 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class Client {
 	
-	public static void main(String[] args) {
-		try {
-			Client c = new Client(8080, "127.0.0.1");
-			c.runClient();
-			c.sendToServer("I heard you !!!!");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+
 	
 	private Socket socket;
 	private LinkedBlockingQueue<String> messages;
 	private ConnectionToServer server;
-
+	private Main main;
 	private boolean active = true;
 	
-	public Client(int port, String address) throws IOException {
+	public Client(int port, String address, Main main) throws IOException {
+		this.main = main;
 		this.socket = new Socket(address,port);
 		System.out.println("client initiated");
 		this.messages = new LinkedBlockingQueue<String>();
 
 	}
 
-	public void sendToServer(String message) {
-		while (this.server == null) {
-			System.out.println("connecting...");
-		}
-		this.server.write(message);
-	}
 
 	public void runClient () {
 		Thread connectToServer = new Thread() {
 			@Override
 			public void run() {
-				System.out.println("Listening...");
+				System.out.println("run client..");
 				try{
 					server = new ConnectionToServer(socket);
 					System.out.println("Connected to server ");
@@ -61,6 +47,7 @@ public class Client {
 						if (!messages.isEmpty()) {
 							String message = messages.take();
 							System.out.println(message);
+							main.parseCommand(message);
 						}
 					}
 					catch(InterruptedException e){
@@ -72,6 +59,12 @@ public class Client {
 		messageHandling.start();
 	}
 
+	public void sendToServer(String message) {
+		while (this.server == null) {
+			System.out.print(".");
+		}
+		this.server.write(message);
+	}
 
 	private class ConnectionToServer {
 		InputStream in;
@@ -79,7 +72,6 @@ public class Client {
 		DataInputStream dis;
 		DataOutputStream dos;
 		Socket socket;
-		int index;
 		boolean active = true;
 
 		ConnectionToServer(Socket socket) throws IOException {
@@ -121,8 +113,21 @@ public class Client {
 				active=false;
 				e.printStackTrace();
 				//lost connection with server
-
 			}
 		}
 	}
+
+
+//	// deprecated
+//	public static void main(String[] args) {
+//		try {
+//			Game game= new Game(new Main());
+//			Client c = new Client(8080, "127.0.0.1", game);
+//			c.runClient();
+//			c.sendToServer("I heard you !!!!");
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 }

@@ -12,21 +12,13 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class Server {
 	
-	public static void main(String[] args) {
-		try {
-			Server s = new Server(8080, 4);
-			s.runServer();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
+
 	private int turn=0;
 	private int numberOfPlayers;
 	private ArrayList<ConnectionToClient> clients;
 	private ServerSocket serverSocket;
 	private LinkedBlockingQueue<String> messages;
+	private Main main;
 
 	public void runServer() {
 
@@ -59,7 +51,7 @@ public class Server {
 					try{
 						String message = messages.take();
 						// Do some handling here...
-						System.out.println(message);
+						main.parseCommand(message);
 					}
 					catch(InterruptedException e){
 						e.printStackTrace();
@@ -73,27 +65,23 @@ public class Server {
 //		while(true);
 	}
 
-	public Server(int port, int numberOfPlayers) throws IOException {
+	public Server(int port, int numberOfPlayers, Main main) throws IOException {
+		this.main = main;
 		this.serverSocket = new ServerSocket(port);
 		this.numberOfPlayers = numberOfPlayers;
 		this.clients = new ArrayList<ConnectionToClient>();
 		this.messages = new LinkedBlockingQueue<String>();
 	}
-	
-	public void sendMessage(String message, int index) {
-		clients.get(index).write(message);
-	}
+
 	
 	public void sendMessageToAll(String message) {
-		System.out.println("I was out side");
 		System.out.println("clients size: " + clients.size());
 		for (ConnectionToClient c: clients) {
-			System.out.println("I was above.");
 			c.write(message);
-			System.out.println("I was here.");
 		}
 	}
-	
+
+
 	public void nextTurn() {
 		turn = (turn+1)%numberOfPlayers;
 	}
@@ -117,20 +105,19 @@ public class Server {
 			
 			Thread read = new Thread(){
                 public void run(){
-					while(active) {
-					   try {
-							String message = dis.readUTF();
-							messages.put(message);
-					   }
-					   catch (Exception e) {
-							e.printStackTrace();
-							active=false;
-					   }
-					}
+				while(active) {
+				   try {
+						String message = dis.readUTF();
+						messages.put(message);
+				   }
+				   catch (Exception e) {
+						e.printStackTrace();
+						active=false;
+				   }
+				}
                 }
             };
 
-//            read.setDaemon(true); // terminate when main ends
             read.start();
 		}
 		
@@ -152,4 +139,14 @@ public class Server {
 		}
 	}
 
+	// deprecated
+//	public static void main(String[] args) {
+//		try {
+//			Server s = new Server(8080, 4, new Game(new Main()));
+//			s.runServer();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 }
