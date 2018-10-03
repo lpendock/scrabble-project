@@ -5,9 +5,7 @@ import java.net.*;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class Client {
-	
 
-	
 	private Socket socket;
 	private LinkedBlockingQueue<String> messages;
 	private ConnectionToServer server;
@@ -116,18 +114,4 @@ public class Client {
 			}
 		}
 	}
-
-
-//	// deprecated
-//	public static void main(String[] args) {
-//		try {
-//			Game game= new Game(new Main());
-//			Client c = new Client(8080, "127.0.0.1", game);
-//			c.runClient();
-//			c.sendToServer("I heard you !!!!");
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	}
 }

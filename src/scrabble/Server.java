@@ -139,14 +139,4 @@ public class Server {
 		}
 	}
 
-	// deprecated
-//	public static void main(String[] args) {
-//		try {
-//			Server s = new Server(8080, 4, new Game(new Main()));
-//			s.runServer();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	}
 }

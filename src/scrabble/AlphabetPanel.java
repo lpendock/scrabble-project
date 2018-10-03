@@ -77,7 +77,7 @@ public class AlphabetPanel extends JPanel{
 
     /**
      * This method will be called when player plugged one
-     * alphabet to the board. The tile on AlphabetPanel will
+     * alphabet to the Board. The tile on AlphabetPanel will
      * be updated with a new alphabet from the bag.
      */
     public void setNewTile() {
@@ -94,6 +94,10 @@ public class AlphabetPanel extends JPanel{
         btnNewButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (!game.isPlayerTurn()) {
+                    JOptionPane.showMessageDialog(game.getGameBoard(), "Please wait for your turn");
+                    return;
+                }
                 setLetter = btnNewButton.getText();
                 tileChosen = btnNewButton;
             }
@@ -103,9 +107,13 @@ public class AlphabetPanel extends JPanel{
         btnNewButton_1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (!game.isPlayerTurn()) {
+                    JOptionPane.showMessageDialog(game.getGameBoard(), "Please wait for your turn");
+                    return;
+                }
                 setLetter = btnNewButton_1.getText();
                 tileChosen = btnNewButton_1;
-                System.out.println("button 1 pressed");
+
             }
         });
 
@@ -113,6 +121,10 @@ public class AlphabetPanel extends JPanel{
         btnNewButton_2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (!game.isPlayerTurn()) {
+                    JOptionPane.showMessageDialog(game.getGameBoard(), "Please wait for your turn");
+                    return;
+                }
                 setLetter = btnNewButton_2.getText();
                 tileChosen = btnNewButton_2;
             }
@@ -122,6 +134,10 @@ public class AlphabetPanel extends JPanel{
         btnNewButton_3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (!game.isPlayerTurn()) {
+                    JOptionPane.showMessageDialog(game.getGameBoard(), "Please wait for your turn");
+                    return;
+                }
                 setLetter = btnNewButton_3.getText();
                 tileChosen = btnNewButton_3;
             }
@@ -131,6 +147,10 @@ public class AlphabetPanel extends JPanel{
         btnNewButton_4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (!game.isPlayerTurn()) {
+                    JOptionPane.showMessageDialog(game.getGameBoard(), "Please wait for your turn");
+                    return;
+                }
                 setLetter = btnNewButton_4.getText();
                 tileChosen = btnNewButton_4;
             }
@@ -140,6 +160,11 @@ public class AlphabetPanel extends JPanel{
         btnNewButton_5.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (!game.isPlayerTurn()) {
+                    System.out.println(game.isPlayerTurn());
+                    JOptionPane.showMessageDialog(game.getGameBoard(), "Please wait for your turn");
+                    return;
+                }
                 setLetter = btnNewButton_5.getText();
                 tileChosen = btnNewButton_5;
             }
@@ -149,6 +174,10 @@ public class AlphabetPanel extends JPanel{
         btnNewButton_6.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (!game.isPlayerTurn()) {
+                    JOptionPane.showMessageDialog(game.getGameBoard(), "Please wait for your turn!");
+                    return;
+                }
                 setLetter = btnNewButton_6.getText();
                 tileChosen = btnNewButton_6;
             }
@@ -165,7 +194,5 @@ public class AlphabetPanel extends JPanel{
         btnNewButton_5.setText(hand.get(5));
         btnNewButton_6.setText(hand.get(6));
     }
-
-
 
 }

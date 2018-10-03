@@ -18,8 +18,6 @@ public class Main extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-
-
 	private boolean host = false;
 //	private ConcurrentLinkedQueue<String> members;
 	private ArrayList<String> members;
@@ -53,11 +51,23 @@ public class Main extends JFrame {
 	public void startGame() {
 
 		if (host) {
+			game.setPlayerTurn(true);
 			this.server.sendMessageToAll("startGame");
 		}
 		// show game
-		game.setTitle("Scrabble");
+		game.setTitle("Scrabble -- " + currentPlayer);
 		game.setVisible(true);
+
+
+		// when game started, the member list should be fixed, so
+		// we filter out any possible null values.
+		ArrayList<String> finalMembers = new ArrayList<>();
+		for (String member : members) {
+			if (member != null) {
+				finalMembers.add(member);
+			}
+		}
+		this.members = finalMembers;
 
 		game.initInfoBoard();
 		// hide the main GUI
@@ -122,8 +132,30 @@ public class Main extends JFrame {
 			return;
 		}
 
+
+		// should only be received by clients
 		if (commands[0].equals("startGame")) {
 			startGame();
+			return;
+		}
+
+		// should only be received by host
+		if (commands[0].equals("finishedTurn")) {
+			String nextPlayer = this.game.getPlayerNextTurn(commands[1]);
+			if (nextPlayer.equals(this.currentPlayer)) {
+				this.game.setPlayerTurn(true);
+			} else {
+				this.game.notifyNextPlayer(nextPlayer);
+			}
+			return;
+		}
+
+		// should only be received by clients
+		if (commands[0].equals("nextPlayer")) {
+			if (commands[1].equals(this.currentPlayer)) {
+				this.game.setPlayerTurn(true);
+			}
+			return;
 		}
 	}
 
@@ -138,6 +170,8 @@ public class Main extends JFrame {
 		});
 
 	}
+
+
 
 
 	public void initMemberMenu() {

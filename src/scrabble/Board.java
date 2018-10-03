@@ -15,37 +15,28 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 
-public class board extends JPanel {
+public class Board extends JPanel {
 	 
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	public static final int SQUARE_SIZE = 10;
-	int players = 2;
 
-	JPanel scorePanel = new JPanel();
-	JLabel[] scores = null;
+	private JPanel scorePanel = new JPanel();
 
-	JButton rackButton1 = new JButton();
-	JButton rackButton2 = new JButton();
-	JPanel gridPanel = new JPanel();
-	JButton[][] grid = new JButton[20][20];
-	JPanel[][] squares = new JPanel[20][20];
-	String setLetter = "";
+	private JPanel gridPanel = new JPanel();
+	private JButton[][] grid = new JButton[20][20];
+	private JPanel[][] squares = new JPanel[20][20];
+	private String setLetter = "";
 
 
 	private static final int DEFAULT_WIDTH = 800;
 	private static final int DEFAULT_HEIGHT = 800;
 	private AlphabetPanel alphabetPanel;
 	private Game game;
-	// Button to initiate vote
-	private final JButton voteButton = new JButton("vote");
 
 
-
-	private int playerNums;
 
 
 	public Dimension getPreferredSize() {
@@ -55,18 +46,12 @@ public class board extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public board(Game game) {
+	public Board(Game game) {
 		this.game = game;
 		this.alphabetPanel = game.getAlphabetPanel();
 		setLayout(new BorderLayout());
-		this.players = players;
-		this.playerNums = 4;
-
-		//create the bag and draw first hand.
-		//this can be changed where a client has to send a request or something
 
 
-		scores = new JLabel[players];
 		initGUI();
 
 		// set some padding between other components
@@ -76,42 +61,24 @@ public class board extends JPanel {
 	
 	}
 
-	
 	private void initGUI() {
 		initGrid();
-//		initScorePanel();
 		add(gridPanel);
 		add(scorePanel, BorderLayout.NORTH);
 
-		
 	}
-
-//	private void initScorePanel() {
-//		scorePanel.setLayout(new GridLayout(1, players));
-//		for (int row = 0; row < players; row++) {
-//			//Can use arraylist or whatever to save all player names
-//			//For now just uses one player
-//			JLabel label = new JLabel(gui.getPlayer()+":");
-//			scores[row] =label;
-//			scorePanel.add(label);
-//		}
-//
-//	}
-
-
 
 	private void initGrid() {
 		gridPanel.setLayout(new GridLayout(20, 20));
 
-
-
 		for (int row = 0; row < 20; row++) {
 			for (int column = 0; column < 20; column++) {
-				//Square square = board.getSquare(row, column);
+				//Square square = Board.getSquare(row, column);
 				JPanel panel = new JPanel();
 				JButton button = new JButton();
 
 				button.setFont(new Font("Arial", Font.BOLD, 20));
+				button.setBackground(Color.WHITE);
 
 				//Row and column number can be sent to other players when it updates
 				final int rowNum = row;
@@ -127,13 +94,22 @@ public class board extends JPanel {
 	            	if(button.getText().equals("") && !setLetter.equals("")) {
 						button.setText(setLetter);
 	            		alphabetPanel.setNewTile();
+
+	            		game.setPlayerTurn(false);
 						game.notifyBoardChanges(rowNum,columnNum,setLetter);
+						if (game.isHost()) {
+							game.notifyNextPlayer(game.getPlayerNextTurn(game.getCurrentPlayer()));
+						} else {
+							game.notifyCompletedTurn();
+						}
+
+						button.setBackground(Color.cyan);
 						setLetter = "";
 	            		checkScore(rowNum,columnNum);
 	            	}
 	            }
 				});
-				button.setBackground(Color.white);
+
 				button.setMargin( new Insets(5, 5, 5, 5) );
 				panel.setBackground(Color.white);
 				panel.setSize(50, 50);
@@ -150,9 +126,10 @@ public class board extends JPanel {
 	
 
 
-	//Can be used to update board when we implement that
+	//Can be used to update Board when we implement that
 	public void updateBoard(int rowNum,int columnNum, String letter) {
 		grid[rowNum][columnNum].setText(letter);
+		grid[rowNum][columnNum].setBackground(Color.cyan);
 	}
 
 	/**
@@ -249,7 +226,6 @@ public class board extends JPanel {
 			if (vote.getResult() == true){
 				int score = s.length();
 				game.getGameInfoBoard().updateScore(game.getCurrentPlayer(), score);
-//			scores[0].setText(gui.getPlayer()+":"+score);
 				System.out.println(score);
 			}else{
 				JOptionPane.showMessageDialog(this, "Error", "Vote failed", n);

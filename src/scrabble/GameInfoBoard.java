@@ -25,7 +25,7 @@ public class GameInfoBoard extends JPanel{
     }
 
 
-    GameInfoBoard (Game game) {
+    public GameInfoBoard (Game game) {
         setLayout(new BorderLayout());
 
         playerListPanel.setLayout( new GridLayout(8,1));
