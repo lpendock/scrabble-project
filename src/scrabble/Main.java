@@ -222,6 +222,23 @@ public class Main extends JFrame {
 
 		this.game = new Game(this);
 
+
+		// handle closing operations
+		this.game.addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+				if (JOptionPane.showConfirmDialog(game,
+						"Are you sure you want to close this window?", "Close Window?",
+						JOptionPane.YES_NO_OPTION,
+						JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
+					//can send info to whatever before exit
+					int exiting = 1;
+					System.out.println("exiting");
+					System.exit(0);
+				}
+			}
+		});
+
 		int n = JOptionPane.showConfirmDialog(
 				this,
 				"Do you want to host a game?",

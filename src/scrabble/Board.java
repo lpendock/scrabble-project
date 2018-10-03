@@ -93,19 +93,32 @@ public class Board extends JPanel {
 
 	            	if(button.getText().equals("") && !setLetter.equals("")) {
 						button.setText(setLetter);
+						button.setBackground(Color.cyan);
 	            		alphabetPanel.setNewTile();
-
-	            		game.setPlayerTurn(false);
 						game.notifyBoardChanges(rowNum,columnNum,setLetter);
-						if (game.isHost()) {
-							game.notifyNextPlayer(game.getPlayerNextTurn(game.getCurrentPlayer()));
-						} else {
-							game.notifyCompletedTurn();
+
+						int voteOrNot = JOptionPane.showConfirmDialog(
+								gridPanel,
+								"Is this a word?",
+								"confirm",
+								JOptionPane.YES_NO_OPTION);
+						setLetter = "";
+						if (voteOrNot == JOptionPane.YES_OPTION) {
+							checkScore(rowNum,columnNum);
 						}
 
-						button.setBackground(Color.cyan);
-						setLetter = "";
-	            		checkScore(rowNum,columnNum);
+
+						// if there are multiple players, they have to play by turn
+						if (game.getMembersList().size() != 1) {
+
+							game.setPlayerTurn(false);
+
+							if (game.isHost()) {
+								game.notifyNextPlayer(game.getPlayerNextTurn(game.getCurrentPlayer()));
+							} else {
+								game.notifyCompletedTurn();
+							}
+						}
 	            	}
 	            }
 				});
@@ -139,14 +152,6 @@ public class Board extends JPanel {
 	 * @param columnNum
 	 */
 	public void checkScore(int rowNum,int columnNum) {
-
-		int voteOrNot = JOptionPane.showConfirmDialog(
-				this,
-				"Is this a word?",
-				"confirm",
-				JOptionPane.YES_NO_OPTION);
-
-		if (voteOrNot == JOptionPane.NO_OPTION) return;
 
 		// The chosen tile is the starting point.
 		// There is only two cases: the word may be in the same row
@@ -195,17 +200,12 @@ public class Board extends JPanel {
 
 		String s = (String)JOptionPane.showInputDialog(
                 this,
-                "Words found are:\n"
+                "Words found in two directions are:\n"
                ,
                 "Customized Dialog",
                 JOptionPane.PLAIN_MESSAGE,
                 null, words,
 				words[0]);
-
-		
-		//TEMP trying out of voting
-		//default icon, custom title
-
 
 		// Single player should not vote in reality
 		// Just do this for testing
