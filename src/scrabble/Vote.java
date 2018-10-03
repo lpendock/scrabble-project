@@ -40,27 +40,6 @@ public class Vote {
     }
 
 
-    // just for testing
-    public static void main(String[] args) {
-        Vote a = new Vote(10);
-        a.getMajority();
-
-        a.voteYes();
-        a.voteYes();
-        a.voteYes();
-        a.voteYes();
-        a.voteYes();
-        a.voteNo();
-        a.voteNo();
-
-        if (a.votingCompleted()) {
-            System.out.println("Voting completed. Result is: " + a.getResult());
-        } else {
-            System.out.println("No result yet");
-        }
-
-    }
-
 
     /**
      * This should be called only when the voting is completed

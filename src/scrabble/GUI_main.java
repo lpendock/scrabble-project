@@ -58,7 +58,9 @@ public class GUI_main extends JFrame {
 		//Toolkit tk = Toolkit.getDefaultToolkit();
 		//Dimension screenSize = tk.getScreenSize();
 		//setLocation(screenSize.width / 2, screenSize.height / 2);
+		this.getContentPane().setLayout(new BorderLayout());
 		setBounds(100, 100, 1000, 800);
+		setTitle("Scrabble");
 		Login login = new Login(this);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -71,8 +73,14 @@ public class GUI_main extends JFrame {
 		// 2 = board
 		// 3 = membersMenu
 		if (num == 2) {
-			board board = new board(players,this);
-			setContentPane(board);
+			GameView gameView = new GameView();
+			// show gameView
+			gameView.setTitle("Scrabble");
+			gameView.setVisible(true);
+			gameView.addMember(player);
+			gameView.initInfoBoard();
+			// hide the main GUI
+			this.setVisible(false);
 			validate();
 		}
 		else if(num == 3) {
