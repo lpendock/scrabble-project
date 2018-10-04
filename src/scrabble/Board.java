@@ -14,9 +14,6 @@ import javax.swing.JPanel;
 public class Board extends JPanel {
 	 
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private JPanel scorePanel = new JPanel();
@@ -166,17 +163,17 @@ public class Board extends JPanel {
 		String columnWord = grid[rowNum][columnNum].getText();
 		String rowWord = grid[rowNum][columnNum].getText();
 
-		int leftColumnNum = 0;
-		int rightColumnNum = 0;
-		int aboveRowNum = 0;
-		int bottomRowNum = 0;
+		int leftColumnNum = columnNum;
+		int rightColumnNum = columnNum;
+		int aboveRowNum = rowNum;
+		int bottomRowNum = rowNum;
 
 		// Select characters below the target tile
 		for (int row = rowNum + 1; row < 20; row++) {
 			if (!grid[row][columnNum].getText().equals("")) {
 				columnWord = columnWord + grid[row][columnNum].getText();
+				bottomRowNum = row;
 			} else {
-				bottomRowNum= row - 1;
 				break;
 			}
 		}
@@ -185,8 +182,8 @@ public class Board extends JPanel {
 		for (int row = rowNum - 1; row >= 0; row--) {
 			if (!grid[row][columnNum].getText().equals("")) {
 				columnWord = grid[row][columnNum].getText() + columnWord;
+				aboveRowNum = row;
 			} else {
-				aboveRowNum = row + 1;
 				break;
 			}
 		}
@@ -195,8 +192,8 @@ public class Board extends JPanel {
 		for (int column = columnNum + 1; column < 20; column++) {
 			if (!grid[rowNum][column].getText().equals("")) {
 				rowWord = rowWord + grid[rowNum][column].getText();
+				rightColumnNum = column;
 			} else {
-				rightColumnNum = column - 1 ;
 				break;
 			}
 		}
@@ -205,8 +202,8 @@ public class Board extends JPanel {
 		for (int column = columnNum - 1; column >= 0; column--) {
 			if (!grid[rowNum][column].getText().equals("")) {
 				rowWord = grid[rowNum][column].getText() + rowWord;
+				leftColumnNum = column;
 			} else {
-				leftColumnNum = column + 1;
 				break;
 			}
 		}
@@ -223,11 +220,13 @@ public class Board extends JPanel {
 				null, words,
 				words[0]);
 
+		if (s == null) return;
+
 		String index = "";
 		this.selectedWord = s;
 
 
-		if (s.equals(rowWord)) {
+		if (s.equals(rowWord) ) {
 			if (this.game.getMembersList().size() == 1) {
 				this.highlightCompletedWord(rowNum, leftColumnNum, rowNum, rightColumnNum);
 				this.game.getGameInfoBoard().updateScore(this.game.getCurrentPlayer(), selectedWord.length());

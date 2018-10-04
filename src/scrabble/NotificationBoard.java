@@ -7,6 +7,6 @@ public class NotificationBoard extends JPanel {
     private JLabel message;
     private Game game;
     public NotificationBoard (Game game) {
-        // future UI component
+        // todo: possible future UI component ( Do we really need that? )
     }
 }

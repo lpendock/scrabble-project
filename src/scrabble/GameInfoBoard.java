@@ -1,19 +1,18 @@
 package scrabble;
 
-import javafx.beans.property.adapter.JavaBeanLongProperty;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GameInfoBoard extends JPanel{
 
-    JLabel playerName;
-    JLabel score;
-    JPanel playerListPanel = new JPanel();
-    JPanel scoreListPanel = new JPanel();
+    private JLabel playerName;
+    private JLabel score;
+    private JPanel playerListPanel = new JPanel();
+    private JPanel scoreListPanel = new JPanel();
 
     private static final int DEFAULT_WIDTH = 200;
     private static final int DEFAULT_HEIGHT = 400;
