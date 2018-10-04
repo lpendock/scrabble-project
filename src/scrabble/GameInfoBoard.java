@@ -1,5 +1,7 @@
 package scrabble;
 
+import javafx.beans.property.adapter.JavaBeanLongProperty;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
@@ -38,6 +40,8 @@ public class GameInfoBoard extends JPanel{
         playerName = new JLabel("Players");
         score = new JLabel("Score");
 
+        playerName.setFont(new Font("Courier New", Font.BOLD, 18));
+        score.setFont(new Font("Courier New", Font.BOLD, 18));
         playerListPanel.add(playerName);
         scoreListPanel.add(score);
 
@@ -51,8 +55,13 @@ public class GameInfoBoard extends JPanel{
     public void initPlayerInfo() {
         this.members = game.getMembersList();
         for (int i = 0; i < members.size(); i ++) {
-            playerListPanel.add(new JLabel(members.get(i)));
+
+            JLabel memberName = new JLabel(members.get(i));
+            memberName.setFont(new Font("Courier New", Font.BOLD, 15));
+            playerListPanel.add(memberName);
+
             JLabel score = new JLabel("0");
+            score.setFont(new Font("Courier New", Font.BOLD, 15));
             scoreListPanel.add(score);
 
             playerScoreMap.put(members.get(i), score);
