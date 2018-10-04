@@ -1,18 +1,14 @@
 package scrabble;
 
-import com.sun.xml.internal.ws.api.streaming.XMLStreamReaderFactory;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.border.LineBorder;
+
 
 
 public class Board extends JPanel {
@@ -68,6 +64,12 @@ public class Board extends JPanel {
 
 	}
 
+
+	public String getSelectedWord() {
+		return this.selectedWord;
+	}
+
+
 	private void initGrid() {
 		gridPanel.setLayout(new GridLayout(20, 20));
 
@@ -92,13 +94,17 @@ public class Board extends JPanel {
 					}
 
 	            	if(button.getText().equals("") && !setLetter.equals("")) {
+
 						button.setText(setLetter);
 						button.setBackground(Color.cyan);
+						button.setBorderPainted(false);
+						button.setOpaque(true);
+
 	            		alphabetPanel.setNewTile();
 						game.notifyBoardChanges(rowNum,columnNum,setLetter);
 
 						int voteOrNot = JOptionPane.showConfirmDialog(
-								gridPanel,
+								game.getGameInfoBoard(),
 								"Is this a word?",
 								"confirm",
 								JOptionPane.YES_NO_OPTION);
@@ -146,35 +152,6 @@ public class Board extends JPanel {
 	}
 
 
-	/**
-	 * initiate a vote
-	 */
-	public void initVote() {
-		// Single player should not vote in reality
-		// Just do this for testing
-		Vote vote = new Vote(2);
-		int n = JOptionPane.showConfirmDialog(
-				this,
-				"Do you accept this Word?",
-				"Voting Process",
-				JOptionPane.YES_NO_OPTION);
-
-		if(n == 1) {
-			vote.voteNo();
-		}else {
-			vote.voteYes();
-		}
-		if (vote.votingCompleted()) {
-
-			if (vote.getResult() == true){
-				int score = selectedWord.length();
-				game.getGameInfoBoard().updateScore(game.getCurrentPlayer(), score);
-				System.out.println(score);
-			}else{
-				JOptionPane.showMessageDialog(this, "Error", "Vote failed", n);
-			}
-		}
-	}
 
 
 	/**
@@ -240,7 +217,7 @@ public class Board extends JPanel {
 		String[] words = {rowWord, columnWord};
 
 		String s = (String) JOptionPane.showInputDialog(
-				this,
+				game.getGameInfoBoard(),
 				"Words found in two directions are:\n"
 				,
 				"Customized Dialog",
@@ -249,9 +226,9 @@ public class Board extends JPanel {
 				words[0]);
 
 		if (s.equals(rowWord)) {
-			this.game.notifyWordHilighted(rowNum, leftColumnNum, rowNum, rightColumnNum);
+			this.game.notifyWordCompleted(rowNum, leftColumnNum, rowNum, rightColumnNum);
 		} else {
-			this.game.notifyWordHilighted(aboveRowNum, columnNum, bottomRowNum, columnNum);
+			this.game.notifyWordCompleted(aboveRowNum, columnNum, bottomRowNum, columnNum);
 		}
 		selectedWord = s;
 		return s;

@@ -5,7 +5,6 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.io.IOException;
 import java.util.ArrayList;
-//import java.util.concurrent.ConcurrentLinkedQueue;
 
 
 import javax.swing.*;
@@ -19,7 +18,6 @@ public class Main extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private boolean host = false;
-//	private ConcurrentLinkedQueue<String> members;
 	private ArrayList<String> members;
 	private String currentPlayer;
 	public Server server;
@@ -107,8 +105,8 @@ public class Main extends JFrame {
 		System.out.println("command received is: " + command);
 		String[] commands = command.split("#");
 		if (commands.length < 1) System.out.println("commands not valid");
-
-		if (commands[0].equals("updateBoard") && commands.length == 4) {
+		
+		if (commands[0].equals("updateBoard")) {
 			this.game.getGameBoard().updateBoard(Integer.parseInt(commands[1]), Integer.parseInt(commands[2]), commands[3]);
 			if (this.isHost()) {
 				this.game.notifyBoardChanges(Integer.parseInt(commands[1]), Integer.parseInt(commands[2]), commands[3]);
@@ -158,13 +156,26 @@ public class Main extends JFrame {
 			return;
 		}
 
-		if (commands[0].equals("highlight")) {
+		if (commands[0].equals("completedWord")) {
 			if (isHost()) {
-				this.game.notifyWordHilighted(Integer.parseInt(commands[1]), Integer.parseInt(commands[2]), Integer.parseInt(commands[3]), Integer.parseInt(commands[4]));
+				this.game.notifyWordCompleted(Integer.parseInt(commands[1]), Integer.parseInt(commands[2]), Integer.parseInt(commands[3]), Integer.parseInt(commands[4]));
 			}
 			this.game.getGameBoard().highlightWord(Integer.parseInt(commands[1]), Integer.parseInt(commands[2]), Integer.parseInt(commands[3]), Integer.parseInt(commands[4]));
 			return;
 		}
+
+		if (commands[0].equals("initVote")) {
+			if (isHost()) {
+				this.game.initVote(commands[1]);
+			}
+			if (this.currentPlayer.equals(commands[1])) {
+				this.game.displayVote();
+			}
+
+			return;
+		}
+
+
 	}
 
 	public void notifyServerJoiningGame() {
@@ -178,7 +189,6 @@ public class Main extends JFrame {
 		});
 
 	}
-
 
 
 

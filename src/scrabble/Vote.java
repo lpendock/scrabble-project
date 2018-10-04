@@ -14,6 +14,7 @@ public class Vote {
     private int yesCount = 0;
     private int noCount = 0;
     private boolean finalResult;
+    private String initiator;
 
 
     // Just for testing, to see the calculating result.
@@ -27,8 +28,9 @@ public class Vote {
      * We want the number of majority people to be a reasonable integer, so we
      * choose the ceiling value. (floor value may lead to bad outcome)
      */
-    public Vote(int numberOfPlayer) {
+    public Vote(int numberOfPlayer, String playerName) {
         this.playerNums = numberOfPlayer;
+        this.initiator = playerName;
         /**
          * Explanation for the formula (a little bit wordy):
          * The player who initiated the game should not
@@ -40,6 +42,13 @@ public class Vote {
     }
 
 
+    /**
+     * Return the initiator of this vote.
+     * @return
+     */
+    public String getInitiator() {
+        return this.initiator;
+    }
 
     /**
      * This should be called only when the voting is completed

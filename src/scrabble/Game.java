@@ -11,6 +11,7 @@ public class Game extends JFrame{
     private AlphabetPanel alphabetPanel;
     private GameInfoBoard gameInfoBoard;
     private boolean playerTurn;
+    private Vote vote;
 
     public Game(Main main) {
 
@@ -26,6 +27,59 @@ public class Game extends JFrame{
 
         this.getContentPane().add(parentPanel);
         this.pack();
+    }
+
+
+    /**
+     * Initiate a vote. Should only be called by server
+     */
+    public void initVote(String voteInitiator) {
+        // Single player should not vote in reality
+
+        // should only be called by server
+        if (!isHost()) return;
+
+        this.vote = new Vote(this.getMembersList().size(), voteInitiator);
+        this.main.server.sendMessageToAll("initVote#" + voteInitiator);
+
+//        if (vote.votingCompleted()) {
+//
+//            if (vote.getResult() == true){
+//                int score = this.gameBoard.getSelectedWord().length();
+//                this.gameInfoBoard.updateScore(this.getCurrentPlayer(), score);
+//                System.out.println(score);
+//            } else {
+//                JOptionPane.showMessageDialog(gameInfoBoard, "Error", "Vote failed", JOptionPane.ERROR_MESSAGE);
+//            }
+//        }
+    }
+
+
+
+    public void notifyInitVote() {
+        if (isHost()) {
+            initVote(this.getCurrentPlayer());
+            return;
+        }
+        this.main.client.sendToServer("initVote#" + this.getCurrentPlayer());
+    }
+
+    public void displayVote() {
+        // player of this turn show not vote
+        if (this.playerTurn) return;
+
+        int n = JOptionPane.showConfirmDialog(
+                this.gameInfoBoard,
+                "Do you accept this Word?",
+                "Voting Process",
+                JOptionPane.YES_NO_OPTION);
+
+        if (n == JOptionPane.YES_OPTION) {
+
+        } else {
+
+        }
+
     }
 
     public void notifyBoardChanges(int rowNum,int columnNum, String letter) {
@@ -54,8 +108,8 @@ public class Game extends JFrame{
     }
 
 
-    public void notifyWordHilighted(int startRow, int startColumn, int endRow, int endColumn) {
-        String command = "highlight#" + startRow + "#" + startColumn + "#" + endRow + "#" +endColumn;
+    public void notifyWordCompleted(int startRow, int startColumn, int endRow, int endColumn) {
+        String command = "completedWord#" + startRow + "#" + startColumn + "#" + endRow + "#" +endColumn;
         if (isHost()) {
             this.gameBoard.highlightWord(startRow, startColumn, endRow, endColumn);
             this.main.server.sendMessageToAll(command);
@@ -84,6 +138,14 @@ public class Game extends JFrame{
 
     }
 
+    public void notifyVoteResult(String result) {
+        String commands = "voteOpinion#" + result;
+        if (isHost()) {
+            // change vote result locally
+        } else {
+            this.main.client.sendToServer(commands);
+        }
+    }
 
     public Board getGameBoard() {
         return gameBoard;
