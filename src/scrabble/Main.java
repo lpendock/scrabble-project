@@ -101,80 +101,97 @@ public class Main extends JFrame {
 		}
 	}
 
+
 	public void parseCommand(String command) {
 		System.out.println("command received is: " + command);
 		String[] commands = command.split("#");
 		if (commands.length < 1) System.out.println("commands not valid");
-		
-		if (commands[0].equals("updateBoard")) {
-			this.game.getGameBoard().updateBoard(Integer.parseInt(commands[1]), Integer.parseInt(commands[2]), commands[3]);
-			if (this.isHost()) {
-				this.game.notifyBoardChanges(Integer.parseInt(commands[1]), Integer.parseInt(commands[2]), commands[3]);
-			}
-			return;
+
+		switch (commands[0]) {
+			case "updateBoard":
+				this.game.getGameBoard().updateBoard(Integer.parseInt(commands[1]), Integer.parseInt(commands[2]), commands[3]);
+				if (this.isHost()) {
+					this.game.notifyBoardChanges(Integer.parseInt(commands[1]), Integer.parseInt(commands[2]), commands[3]);
+				}
+				break;
+
+			case "memberAdded":
+				addMember(commands[1]);
+				notifyClientsMemberChanges();
+				initMemberMenu();
+				break;
+
+			case "memberUpdated":
+				this.members = new ArrayList<>();
+				for (int i = 1; i < commands.length; i++) {
+					addMember(commands[i]);
+				}
+				initMemberMenu();
+				break;
+
+			// should only be received by clients
+			case "startGame":
+				startGame();
+				break;
+
+			// should only be received by host
+			case "finishedTurn":
+				String nextPlayer = this.game.getPlayerNextTurn(commands[1]);
+				if (nextPlayer.equals(this.currentPlayer)) {
+					this.game.setPlayerTurn(true);
+				} else {
+					this.game.notifyNextPlayer(nextPlayer);
+				}
+				break;
+
+			// should only be received by clients
+			case "nextPlayer":
+				if (commands[1].equals(this.currentPlayer)) {
+					this.game.setPlayerTurn(true);
+				}
+				break;
+
+			case "attemptedWord":
+				if (isHost()) {
+					this.game.notifyWordAttempted(Integer.parseInt(commands[1]), Integer.parseInt(commands[2]), Integer.parseInt(commands[3]), Integer.parseInt(commands[4]));
+				}
+				this.game.getGameBoard().highlightAttemptedWord(Integer.parseInt(commands[1]), Integer.parseInt(commands[2]), Integer.parseInt(commands[3]), Integer.parseInt(commands[4]));
+				break;
+
+			case "initVote":
+				// todo: host received word index
+
+				if (isHost()) {
+					this.game.initVote(commands[1], commands[2]);
+					String index = commands[3] + "#" + commands[4] + "#" + commands[5] + "#" + commands[6];
+					this.game.getVote().setIndex(index);
+				}
+
+				// all players except the initiator should vote
+				if (!this.currentPlayer.equals(commands[1])) {
+					this.game.displayVote();
+				}
+				break;
+
+			// only host should receive this command
+			case "voteOpinion":
+				this.game.updateVote(commands[1]);
+				break;
+
+			// clients update their scores
+			case "updateScore":
+				this.game.getGameInfoBoard().updateScore(commands[1], Integer.parseInt(commands[2]));
+				break;
+
+			case "completedWord":
+				if (commands[1].equals("true")) {
+					this.game.getGameBoard().highlightCompletedWord(Integer.parseInt(commands[2]),
+							Integer.parseInt(commands[3]), Integer.parseInt(commands[4]), Integer.parseInt(commands[5]));
+				} else {
+					this.game.getGameBoard().setBackAttemptedWord(Integer.parseInt(commands[2]),
+							Integer.parseInt(commands[3]), Integer.parseInt(commands[4]), Integer.parseInt(commands[5]));
+				}				break;
 		}
-
-		if (commands[0].equals("memberAdded")) {
-			addMember(commands[1]);
-			notifyClientsMemberChanges();
-			initMemberMenu();
-			return;
-		}
-
-		if (commands[0].equals("memberUpdated")) {
-			this.members = new ArrayList<>();
-			for (int i = 1; i < commands.length; i++) {
-				addMember(commands[i]);
-			}
-			initMemberMenu();
-			return;
-		}
-
-
-		// should only be received by clients
-		if (commands[0].equals("startGame")) {
-			startGame();
-			return;
-		}
-
-		// should only be received by host
-		if (commands[0].equals("finishedTurn")) {
-			String nextPlayer = this.game.getPlayerNextTurn(commands[1]);
-			if (nextPlayer.equals(this.currentPlayer)) {
-				this.game.setPlayerTurn(true);
-			} else {
-				this.game.notifyNextPlayer(nextPlayer);
-			}
-			return;
-		}
-
-		// should only be received by clients
-		if (commands[0].equals("nextPlayer")) {
-			if (commands[1].equals(this.currentPlayer)) {
-				this.game.setPlayerTurn(true);
-			}
-			return;
-		}
-
-		if (commands[0].equals("completedWord")) {
-			if (isHost()) {
-				this.game.notifyWordCompleted(Integer.parseInt(commands[1]), Integer.parseInt(commands[2]), Integer.parseInt(commands[3]), Integer.parseInt(commands[4]));
-			}
-			this.game.getGameBoard().highlightWord(Integer.parseInt(commands[1]), Integer.parseInt(commands[2]), Integer.parseInt(commands[3]), Integer.parseInt(commands[4]));
-			return;
-		}
-
-		if (commands[0].equals("initVote")) {
-			if (isHost()) {
-				this.game.initVote(commands[1]);
-			}
-			if (this.currentPlayer.equals(commands[1])) {
-				this.game.displayVote();
-			}
-
-			return;
-		}
-
 
 	}
 
@@ -189,7 +206,6 @@ public class Main extends JFrame {
 		});
 
 	}
-
 
 
 	public void initMemberMenu() {
@@ -302,7 +318,6 @@ public class Main extends JFrame {
 	}
 
 
-
 	private void initClient() {
 		try {
 			client = new Client(8080, "127.0.0.1", this);
@@ -310,6 +325,5 @@ public class Main extends JFrame {
 			e.printStackTrace();
 		}
 	}
-
 
 }

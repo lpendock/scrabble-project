@@ -33,7 +33,7 @@ public class Server {
 						s.setKeepAlive(true);
 						System.out.println("Connected to client " + size);
 						clients.add(new ConnectionToClient(s, size));
-						System.out.println("adding a client, now clients size is: " + clients.size());
+
 					}
 				}
 				catch(IOException e){
@@ -75,7 +75,6 @@ public class Server {
 
 	
 	public void sendMessageToAll(String message) {
-		System.out.println("clients size: " + clients.size());
 		for (ConnectionToClient c: clients) {
 			c.write(message);
 		}
@@ -126,8 +125,6 @@ public class Server {
             try{
             	if (active) {
 					dos.writeUTF(str);
-
-					System.out.println("wrote something");
 				}
             }
             catch(IOException e){

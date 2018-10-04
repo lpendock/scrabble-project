@@ -84,7 +84,6 @@ public class Client {
 					while(active) {
 						try {
 							String message = dis.readUTF();
-							System.out.println("I heard something");
 							messages.put(message);
 						} catch (Exception e) {
 							// TODO Auto-generated catch block

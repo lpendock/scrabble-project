@@ -31,43 +31,73 @@ public class Game extends JFrame{
 
 
     /**
+     * --------------------------------------Voting logic---------------------------------------------
+     */
+
+    /**
      * Initiate a vote. Should only be called by server
      */
-    public void initVote(String voteInitiator) {
+    public void initVote(String voteInitiator, String word) {
         // Single player should not vote in reality
 
         // should only be called by server
         if (!isHost()) return;
 
-        this.vote = new Vote(this.getMembersList().size(), voteInitiator);
+        this.vote = new Vote(this.getMembersList().size(), voteInitiator, word);
         this.main.server.sendMessageToAll("initVote#" + voteInitiator);
 
-//        if (vote.votingCompleted()) {
-//
-//            if (vote.getResult() == true){
-//                int score = this.gameBoard.getSelectedWord().length();
-//                this.gameInfoBoard.updateScore(this.getCurrentPlayer(), score);
-//                System.out.println(score);
-//            } else {
-//                JOptionPane.showMessageDialog(gameInfoBoard, "Error", "Vote failed", JOptionPane.ERROR_MESSAGE);
-//            }
-//        }
     }
 
 
-
-    public void notifyInitVote() {
+    public void notifyVoteResult(String result) {
+        String commands = "voteOpinion#" + result;
         if (isHost()) {
-            initVote(this.getCurrentPlayer());
+            this.updateVote(result);
+        } else {
+            this.main.client.sendToServer(commands);
+        }
+    }
+
+    // should only be called by host
+    public void updateVote(String result) {
+        // if already completed then do nothing
+        if (vote.votingCompleted()) {
             return;
         }
-        this.main.client.sendToServer("initVote#" + this.getCurrentPlayer());
+
+        if (result.equals("Yes")) {
+            this.vote.voteYes();
+        } else {
+            this.vote.voteNo();
+        }
+
+        // if completed
+        if (vote.votingCompleted()) {
+            if (this.vote.getResult()) {
+                this.notifyWordCompleted(true);
+                this.notifyScoreChanges();
+            } else {
+                this.notifyWordCompleted(false);
+                // todo: notify user vote failed or ?
+            }
+        }
+    }
+
+    public void notifyInitVote(String index) {
+        if (isHost()) {
+            initVote(this.getCurrentPlayer(), this.getGameBoard().getSelectedWord());
+            this.vote.setIndex(index);
+            return;
+        }
+        this.main.client.sendToServer("initVote#" + this.getCurrentPlayer() + "#" +
+                        this.getGameBoard().getSelectedWord() + "#" + index);
     }
 
     public void displayVote() {
-        // player of this turn show not vote
+        // player of this turn should not vote
         if (this.playerTurn) return;
 
+        String result;
         int n = JOptionPane.showConfirmDialog(
                 this.gameInfoBoard,
                 "Do you accept this Word?",
@@ -75,12 +105,21 @@ public class Game extends JFrame{
                 JOptionPane.YES_NO_OPTION);
 
         if (n == JOptionPane.YES_OPTION) {
-
+            result = "Yes";
         } else {
-
+            result = "No";
         }
-
+        this.notifyVoteResult(result);
     }
+
+    public Vote getVote() {
+        return this.vote;
+    }
+
+    /**
+     * --------------------------------------Board Update---------------------------------------------
+     */
+
 
     public void notifyBoardChanges(int rowNum,int columnNum, String letter) {
         if (main.isHost()) {
@@ -92,6 +131,48 @@ public class Game extends JFrame{
         }
     }
 
+    public void notifyWordAttempted(int startRow, int startColumn, int endRow, int endColumn) {
+        String command = "attemptedWord#" + startRow + "#" + startColumn + "#" + endRow + "#" +endColumn;
+        if (isHost()) {
+            this.gameBoard.highlightAttemptedWord(startRow, startColumn, endRow, endColumn);
+            this.main.server.sendMessageToAll(command);
+        } else {
+            this.main.client.sendToServer(command);
+        }
+    }
+
+    // this should only be called by host
+    public void notifyWordCompleted(boolean result) {
+        String command = "completedWord#" + result + "#" + this.vote.getIndex();
+        String[] indices = this.vote.getIndex().split("#");
+        this.main.server.sendMessageToAll(command);
+        if (result) {
+            this.gameBoard.highlightCompletedWord(Integer.parseInt(indices[0]), Integer.parseInt(indices[1]),
+                    Integer.parseInt(indices[2]), Integer.parseInt(indices[3]));
+        } else {
+            this.gameBoard.setBackAttemptedWord(Integer.parseInt(indices[0]), Integer.parseInt(indices[1]),
+                    Integer.parseInt(indices[2]), Integer.parseInt(indices[3]));
+        }
+    }
+
+
+    /**
+     * --------------------------------------GameInfo Update---------------------------------------------
+     */
+
+    private void notifyScoreChanges(){
+
+        if (isHost()) {
+            String command = "updateScore#" + this.vote.getInitiator() + "#" + this.vote.getTargetWord().length();
+            this.main.server.sendMessageToAll(command);
+            this.getGameInfoBoard().updateScore(this.vote.getInitiator(), this.vote.getTargetWord().length());
+        }
+    }
+
+
+    /**
+     * --------------------------------------Player Turn---------------------------------------------
+     */
 
     public void notifyCompletedTurn() {
         if (isHost()) return;
@@ -107,19 +188,7 @@ public class Game extends JFrame{
         }
     }
 
-
-    public void notifyWordCompleted(int startRow, int startColumn, int endRow, int endColumn) {
-        String command = "completedWord#" + startRow + "#" + startColumn + "#" + endRow + "#" +endColumn;
-        if (isHost()) {
-            this.gameBoard.highlightWord(startRow, startColumn, endRow, endColumn);
-            this.main.server.sendMessageToAll(command);
-        } else {
-            this.main.client.sendToServer(command);
-        }
-    }
-
     public void notifyNextPlayer(String nextPlayer) {
-
         if (!isHost()) return;
         this.main.server.sendMessageToAll("nextPlayer#" + nextPlayer);
     }
@@ -133,19 +202,10 @@ public class Game extends JFrame{
         return playerTurn;
     }
 
-    public void notifySocreChanges(){
 
-
-    }
-
-    public void notifyVoteResult(String result) {
-        String commands = "voteOpinion#" + result;
-        if (isHost()) {
-            // change vote result locally
-        } else {
-            this.main.client.sendToServer(commands);
-        }
-    }
+    /**
+     * --------------------------------------Universal----------------------------------------------
+     */
 
     public Board getGameBoard() {
         return gameBoard;
@@ -166,7 +226,6 @@ public class Game extends JFrame{
     public void initInfoBoard() {
         this.gameInfoBoard.initPlayerInfo();
     }
-
 
     public String getCurrentPlayer() {
         return main.getPlayer();

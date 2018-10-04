@@ -77,7 +77,6 @@ public class AlphabetBag {
 			}
 			int num = map.get(letter);
 			map.put(letter, num-1);
-			System.out.println(map);
 			return letter;
 		}
 }

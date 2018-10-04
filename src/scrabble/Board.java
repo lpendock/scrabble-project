@@ -152,15 +152,13 @@ public class Board extends JPanel {
 	}
 
 
-
-
 	/**
 	 * we check characters that adjacent to the the chosen tile from
 	 * four directions: up, down, left, right.
 	 * @param rowNum
 	 * @param columnNum
 	 */
-	public String getWord(int rowNum,int columnNum) {
+	public void getWord(int rowNum,int columnNum) {
 
 		// The chosen tile is the starting point.
 		// There is only two cases: the word may be in the same row
@@ -225,17 +223,52 @@ public class Board extends JPanel {
 				null, words,
 				words[0]);
 
+		String index = "";
+		this.selectedWord = s;
+
 		if (s.equals(rowWord)) {
-			this.game.notifyWordCompleted(rowNum, leftColumnNum, rowNum, rightColumnNum);
+			this.game.notifyWordAttempted(rowNum, leftColumnNum, rowNum, rightColumnNum);
+			index = rowNum + "#" + leftColumnNum + "#" + rowNum + "#" + rightColumnNum;
 		} else {
-			this.game.notifyWordCompleted(aboveRowNum, columnNum, bottomRowNum, columnNum);
+			this.game.notifyWordAttempted(aboveRowNum, columnNum, bottomRowNum, columnNum);
+			index = aboveRowNum + "#" + columnNum + "#" + bottomRowNum + "#" + columnNum;
 		}
-		selectedWord = s;
-		return s;
+
+		// init a vote for this word.
+		this.game.notifyInitVote(index);
+
 	}
 
-	// bugs are here: !!!!
-	public void highlightWord(int startRow, int startColumn, int endRow, int endColumn) {
+	public void setBackAttemptedWord(int startRow, int startColumn, int endRow, int endColumn) {
+		if (startRow == endRow) {
+			for (int i = startColumn; i <= endColumn; i++) {
+				grid[startRow][i].setBackground(Color.cyan);
+				grid[startRow][i].setForeground(Color.BLACK);
+			}
+		} else {
+			for (int i = startRow; i <= endRow; i++) {
+				grid[i][endColumn].setBackground(Color.cyan);
+				grid[i][endColumn].setForeground(Color.BLACK);
+			}
+		}
+	}
+
+	public void highlightCompletedWord(int startRow, int startColumn, int endRow, int endColumn) {
+		if (startRow == endRow) {
+			for (int i = startColumn; i <= endColumn; i++) {
+				grid[startRow][i].setBackground(Color.PINK);
+				grid[startRow][i].setForeground(Color.BLACK);
+			}
+		} else {
+			for (int i = startRow; i <= endRow; i++) {
+				grid[i][endColumn].setBackground(Color.PINK);
+				grid[i][endColumn].setForeground(Color.BLACK);
+			}
+		}
+	}
+
+
+	public void highlightAttemptedWord(int startRow, int startColumn, int endRow, int endColumn) {
 		if (startRow == endRow) {
 			for (int i = startColumn; i <= endColumn; i++) {
 				grid[startRow][i].setBackground(Color.RED);
@@ -248,5 +281,4 @@ public class Board extends JPanel {
 			}
 		}
 	}
-
 }
