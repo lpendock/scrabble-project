@@ -53,6 +53,17 @@ public class Game extends JFrame{
         }
     }
 
+
+    public void notifyWordHilighted(int startRow, int startColumn, int endRow, int endColumn) {
+        String command = "highlight#" + startRow + "#" + startColumn + "#" + endRow + "#" +endColumn;
+        if (isHost()) {
+            this.gameBoard.highlightWord(startRow, startColumn, endRow, endColumn);
+            this.main.server.sendMessageToAll(command);
+        } else {
+            this.main.client.sendToServer(command);
+        }
+    }
+
     public void notifyNextPlayer(String nextPlayer) {
 
         if (!isHost()) return;

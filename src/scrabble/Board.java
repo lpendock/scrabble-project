@@ -29,7 +29,7 @@ public class Board extends JPanel {
 	private JButton[][] grid = new JButton[20][20];
 	private JPanel[][] squares = new JPanel[20][20];
 	private String setLetter = "";
-
+	private String selectedWord = "";
 
 	private static final int DEFAULT_WIDTH = 800;
 	private static final int DEFAULT_HEIGHT = 800;
@@ -104,7 +104,7 @@ public class Board extends JPanel {
 								JOptionPane.YES_NO_OPTION);
 						setLetter = "";
 						if (voteOrNot == JOptionPane.YES_OPTION) {
-							checkScore(rowNum,columnNum);
+							getWord(rowNum,columnNum);
 						}
 
 
@@ -145,76 +145,19 @@ public class Board extends JPanel {
 		grid[rowNum][columnNum].setBackground(Color.cyan);
 	}
 
+
 	/**
-	 * we check characters that adjacent to the the chosen tile from
-	 * four directions: up, down, left, right.
-	 * @param rowNum
-	 * @param columnNum
+	 * initiate a vote
 	 */
-	public void checkScore(int rowNum,int columnNum) {
-
-		// The chosen tile is the starting point.
-		// There is only two cases: the word may be in the same row
-		// or in the same column.
-		String columnWord = grid[rowNum][columnNum].getText();
-		String rowWord = grid[rowNum][columnNum].getText();
-
-		// Select characters below the target tile
-		for (int row = rowNum + 1; row < 20; row++) {
-			if (!grid[row][columnNum].getText().equals("") ) {
-				columnWord = columnWord + grid[row][columnNum].getText();
-			} else {
-				break;
-			}
-		}
-
-		// Select characters above the target tile
-		for (int row = rowNum - 1; row > 0; row--) {
-			if (!grid[row][columnNum].getText().equals("") ) {
-				columnWord = grid[row][columnNum].getText() + columnWord;
-			} else {
-				break;
-			}
-		}
-
-		// Select characters on the right of the target tile
-		for (int column = columnNum + 1; column < 20; column++) {
-			if (!grid[rowNum][column].getText().equals("") ) {
-				rowWord = rowWord + grid[rowNum][column].getText();
-			} else {
-				break;
-			}
-		}
-
-		// Select characters on the left of the target tile
-		for (int column = columnNum - 1; column > 0; column--) {
-			if (!grid[rowNum][column].getText().equals("") ) {
-				rowWord = grid[rowNum][column].getText() + rowWord;
-			} else {
-				break;
-			}
-		}
-
-
-		String[] words = {rowWord,columnWord};
-
-		String s = (String)JOptionPane.showInputDialog(
-                this,
-                "Words found in two directions are:\n"
-               ,
-                "Customized Dialog",
-                JOptionPane.PLAIN_MESSAGE,
-                null, words,
-				words[0]);
-
+	public void initVote() {
 		// Single player should not vote in reality
 		// Just do this for testing
 		Vote vote = new Vote(2);
 		int n = JOptionPane.showConfirmDialog(
-		    this,
-		    "Do you accept this Word?",
-		    "Voting Process",
-		    JOptionPane.YES_NO_OPTION);
+				this,
+				"Do you accept this Word?",
+				"Voting Process",
+				JOptionPane.YES_NO_OPTION);
 
 		if(n == 1) {
 			vote.voteNo();
@@ -224,13 +167,109 @@ public class Board extends JPanel {
 		if (vote.votingCompleted()) {
 
 			if (vote.getResult() == true){
-				int score = s.length();
+				int score = selectedWord.length();
 				game.getGameInfoBoard().updateScore(game.getCurrentPlayer(), score);
 				System.out.println(score);
 			}else{
 				JOptionPane.showMessageDialog(this, "Error", "Vote failed", n);
 			}
 		}
-		
 	}
+
+
+	/**
+	 * we check characters that adjacent to the the chosen tile from
+	 * four directions: up, down, left, right.
+	 * @param rowNum
+	 * @param columnNum
+	 */
+	public String getWord(int rowNum,int columnNum) {
+
+		// The chosen tile is the starting point.
+		// There is only two cases: the word may be in the same row
+		// or in the same column.
+		String columnWord = grid[rowNum][columnNum].getText();
+		String rowWord = grid[rowNum][columnNum].getText();
+
+		int leftColumnNum = 0;
+		int rightColumnNum = 0;
+		int aboveRowNum = 0;
+		int bottomRowNum = 0;
+
+		// Select characters below the target tile
+		for (int row = rowNum + 1; row < 20; row++) {
+			if (!grid[row][columnNum].getText().equals("")) {
+				columnWord = columnWord + grid[row][columnNum].getText();
+			} else {
+				bottomRowNum= row - 1;
+				break;
+			}
+		}
+
+		// Select characters above the target tile
+		for (int row = rowNum - 1; row > 0; row--) {
+			if (!grid[row][columnNum].getText().equals("")) {
+				columnWord = grid[row][columnNum].getText() + columnWord;
+			} else {
+				aboveRowNum = row + 1;
+				break;
+			}
+		}
+
+		// Select characters on the right of the target tile
+		for (int column = columnNum + 1; column < 20; column++) {
+			if (!grid[rowNum][column].getText().equals("")) {
+				rowWord = rowWord + grid[rowNum][column].getText();
+			} else {
+				rightColumnNum = column - 1 ;
+				break;
+			}
+		}
+
+		// Select characters on the left of the target tile
+		for (int column = columnNum - 1; column > 0; column--) {
+			if (!grid[rowNum][column].getText().equals("")) {
+				rowWord = grid[rowNum][column].getText() + rowWord;
+			} else {
+				leftColumnNum = column + 1;
+				break;
+			}
+		}
+
+
+		String[] words = {rowWord, columnWord};
+
+		String s = (String) JOptionPane.showInputDialog(
+				this,
+				"Words found in two directions are:\n"
+				,
+				"Customized Dialog",
+				JOptionPane.PLAIN_MESSAGE,
+				null, words,
+				words[0]);
+
+		if (s.equals(rowWord)) {
+			this.game.notifyWordHilighted(rowNum, leftColumnNum, rowNum, rightColumnNum);
+		} else {
+			this.game.notifyWordHilighted(aboveRowNum, columnNum, bottomRowNum, columnNum);
+		}
+		selectedWord = s;
+		return s;
+	}
+
+	// bugs are here: !!!!
+	public void highlightWord(int startRow, int startColumn, int endRow, int endColumn) {
+		if (startRow == endRow) {
+			for (int i = startColumn; i <= endColumn; i++) {
+				grid[startRow][i].setBackground(Color.RED);
+				grid[startRow][i].setForeground(Color.WHITE);
+			}
+		} else {
+			for (int i = startRow; i <= endRow; i++) {
+				grid[i][endColumn].setBackground(Color.RED);
+				grid[i][endColumn].setForeground(Color.WHITE);
+			}
+		}
+	}
+
 }

@@ -157,6 +157,14 @@ public class Main extends JFrame {
 			}
 			return;
 		}
+
+		if (commands[0].equals("highlight")) {
+			if (isHost()) {
+				this.game.notifyWordHilighted(Integer.parseInt(commands[1]), Integer.parseInt(commands[2]), Integer.parseInt(commands[3]), Integer.parseInt(commands[4]));
+			}
+			this.game.getGameBoard().highlightWord(Integer.parseInt(commands[1]), Integer.parseInt(commands[2]), Integer.parseInt(commands[3]), Integer.parseInt(commands[4]));
+			return;
+		}
 	}
 
 	public void notifyServerJoiningGame() {
