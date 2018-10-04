@@ -182,7 +182,7 @@ public class Board extends JPanel {
 		}
 
 		// Select characters above the target tile
-		for (int row = rowNum - 1; row > 0; row--) {
+		for (int row = rowNum - 1; row >= 0; row--) {
 			if (!grid[row][columnNum].getText().equals("")) {
 				columnWord = grid[row][columnNum].getText() + columnWord;
 			} else {
@@ -202,7 +202,7 @@ public class Board extends JPanel {
 		}
 
 		// Select characters on the left of the target tile
-		for (int column = columnNum - 1; column > 0; column--) {
+		for (int column = columnNum - 1; column >= 0; column--) {
 			if (!grid[rowNum][column].getText().equals("")) {
 				rowWord = grid[rowNum][column].getText() + rowWord;
 			} else {
@@ -218,7 +218,7 @@ public class Board extends JPanel {
 				game.getGameInfoBoard(),
 				"Words found in two directions are:\n"
 				,
-				"Customized Dialog",
+				"Words found",
 				JOptionPane.PLAIN_MESSAGE,
 				null, words,
 				words[0]);
@@ -226,16 +226,29 @@ public class Board extends JPanel {
 		String index = "";
 		this.selectedWord = s;
 
+
 		if (s.equals(rowWord)) {
-			this.game.notifyWordAttempted(rowNum, leftColumnNum, rowNum, rightColumnNum);
-			index = rowNum + "#" + leftColumnNum + "#" + rowNum + "#" + rightColumnNum;
+			if (this.game.getMembersList().size() == 1) {
+				this.highlightCompletedWord(rowNum, leftColumnNum, rowNum, rightColumnNum);
+				this.game.getGameInfoBoard().updateScore(this.game.getCurrentPlayer(), selectedWord.length());
+			} else {
+				this.game.notifyWordAttempted(rowNum, leftColumnNum, rowNum, rightColumnNum);
+				index = rowNum + "#" + leftColumnNum + "#" + rowNum + "#" + rightColumnNum;
+				this.game.notifyInitVote(index);
+			}
 		} else {
-			this.game.notifyWordAttempted(aboveRowNum, columnNum, bottomRowNum, columnNum);
-			index = aboveRowNum + "#" + columnNum + "#" + bottomRowNum + "#" + columnNum;
+			if (this.game.getMembersList().size() == 1) {
+				this.highlightCompletedWord(aboveRowNum, columnNum, bottomRowNum, columnNum);
+				this.game.getGameInfoBoard().updateScore(this.game.getCurrentPlayer(), selectedWord.length());
+			} else {
+				this.game.notifyWordAttempted(aboveRowNum, columnNum, bottomRowNum, columnNum);
+				index = aboveRowNum + "#" + columnNum + "#" + bottomRowNum + "#" + columnNum;
+				this.game.notifyInitVote(index);
+			}
 		}
 
-		// init a vote for this word.
-		this.game.notifyInitVote(index);
+
+
 
 	}
 
