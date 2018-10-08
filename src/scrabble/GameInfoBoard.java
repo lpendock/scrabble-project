@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class GameInfoBoard extends JPanel{
 
@@ -67,7 +68,27 @@ public class GameInfoBoard extends JPanel{
         }
     }
 
+    //check who has highest score(can return multiple people who share highest score)
+    public ArrayList<String> checkWinner() {
+    	ArrayList<String> winners = new ArrayList<String>();
+    	int highscore = 0;
 
+    	for (Map.Entry<String, JLabel> entry : playerScoreMap.entrySet())
+    	{
+    	    int score = Integer.parseInt(entry.getValue().getText());
+    		
+    	    if (score > highscore)
+    	    {
+    	    	highscore = score;
+    	    	winners.clear();
+    	        winners.add(entry.getKey());
+    	    }else if(score == highscore) {
+    	    	winners.add(entry.getKey());
+    	    }
+    	   
+    	}
+    	return winners;
+    }
     public void updateScore(String playerName, int points) {
         int currentScore = Integer.parseInt(this.playerScoreMap.get(playerName).getText());
         this.playerScoreMap.get(playerName).setText("" + (currentScore + points));
