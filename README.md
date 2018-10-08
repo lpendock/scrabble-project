@@ -17,4 +17,3 @@
 - board and all that takes player name and number of players from main-gui
 - other minor stuff i might have missed
 - still very messy
-- There is now a close popup(we can do something before we system exit like sent game over)

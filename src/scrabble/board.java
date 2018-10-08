@@ -1,51 +1,38 @@
 package scrabble;
 
-import com.sun.xml.internal.ws.api.streaming.XMLStreamReaderFactory;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.border.LineBorder;
 
 
-public class board extends JPanel {
+
+public class Board extends JPanel {
 	 
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	public static final int SQUARE_SIZE = 10;
-	int players = 2;
 
-	JPanel scorePanel = new JPanel();
-	JLabel[] scores = null;
+	private JPanel scorePanel = new JPanel();
 
-	JButton rackButton1 = new JButton();
-	JButton rackButton2 = new JButton();
-	JPanel gridPanel = new JPanel();
-	JButton[][] grid = new JButton[20][20];
-	JPanel[][] squares = new JPanel[20][20];
-	String setLetter = "";
-
+	private JPanel gridPanel = new JPanel();
+	private JButton[][] grid = new JButton[20][20];
+	private JPanel[][] squares = new JPanel[20][20];
+	private String setLetter = "";
+	private String selectedWord = "";
 
 	private static final int DEFAULT_WIDTH = 800;
 	private static final int DEFAULT_HEIGHT = 800;
 	private AlphabetPanel alphabetPanel;
-	private GameView gameView;
-	// Button to initiate vote
-	private final JButton voteButton = new JButton("vote");
+	private Game game;
+	//simple check to see if first letter has been set
+	//since host will always start, this is fine?
+	private int setFirstLetter = 0;
 
 
-
-	private int playerNums;
 
 
 	public Dimension getPreferredSize() {
@@ -55,18 +42,12 @@ public class board extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public board(GameView gameView) {
-		this.gameView = gameView;
-		this.alphabetPanel = gameView.getAlphabetPanel();
+	public Board(Game game) {
+		this.game = game;
+		this.alphabetPanel = game.getAlphabetPanel();
 		setLayout(new BorderLayout());
-		this.players = players;
-		this.playerNums = 4;
-
-		//create the bag and draw first hand.
-		//this can be changed where a client has to send a request or something
 
 
-		scores = new JLabel[players];
 		initGUI();
 
 		// set some padding between other components
@@ -76,46 +57,34 @@ public class board extends JPanel {
 	
 	}
 
-	
 	private void initGUI() {
 		initGrid();
-//		initScorePanel();
 		add(gridPanel);
 		add(scorePanel, BorderLayout.NORTH);
 
-		
 	}
 
-//	private void initScorePanel() {
-//		scorePanel.setLayout(new GridLayout(1, players));
-//		for (int row = 0; row < players; row++) {
-//			//Can use arraylist or whatever to save all player names
-//			//For now just uses one player
-//			JLabel label = new JLabel(gui.getPlayer()+":");
-//			scores[row] =label;
-//			scorePanel.add(label);
-//		}
-//
-//	}
 
+	public String getSelectedWord() {
+		return this.selectedWord;
+	}
 
 
 	private void initGrid() {
 		gridPanel.setLayout(new GridLayout(20, 20));
 
-
-
 		for (int row = 0; row < 20; row++) {
 			for (int column = 0; column < 20; column++) {
-				//Square square = board.getSquare(row, column);
+				//Square square = Board.getSquare(row, column);
 				JPanel panel = new JPanel();
 				JButton button = new JButton();
 
 				button.setFont(new Font("Arial", Font.BOLD, 20));
+				button.setBackground(Color.WHITE);
 
 				//Row and column number can be sent to other players when it updates
-				final int rownum = row;
-				final int columnnum = column;
+				final int rowNum = row;
+				final int columnNum = column;
 				button.addActionListener(new ActionListener() {
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
@@ -123,17 +92,53 @@ public class board extends JPanel {
 					if (alphabetPanel.getTheChosenTile() != null) {
 						setLetter = alphabetPanel.getTheChosenTile().getText();
 					}
-
+					
 	            	if(button.getText().equals("") && !setLetter.equals("")) {
-	            		button.setText(setLetter);
-	            		setLetter = "";
-	            		alphabetPanel.setNewTile();
+	            		//simple solution for now(update it if we have time)
+	            	
+	            		if(checkAdj(rowNum,columnNum)) {
+	            			button.setText(setLetter);
+							button.setBackground(Color.cyan);
+							button.setBorderPainted(false);
+							button.setOpaque(true);
 
-	            		checkScore(rownum,columnnum);
+		            		alphabetPanel.setNewTile();
+							game.notifyBoardChanges(rowNum,columnNum,setLetter);
+
+							int voteOrNot = JOptionPane.showConfirmDialog(
+									game.getGameInfoBoard(),
+									"Is this a word?",
+									"confirm",
+									JOptionPane.YES_NO_OPTION);
+							setLetter = "";
+							if (voteOrNot == JOptionPane.YES_OPTION) {
+								getWord(rowNum,columnNum);
+							}
+
+
+							// if there are multiple players, they have to play by turn
+							if (game.getMembersList().size() != 1) {
+
+								game.setPlayerTurn(false);
+
+								if (game.isHost()) {
+									game.notifyNextPlayer(game.getPlayerNextTurn(game.getCurrentPlayer()));
+								} else {
+									game.notifyCompletedTurn();
+								}
+							}
+							//if host is player,set that first letter is placed once it is done
+							if(game.isHost()) {
+		            			setFirstLetter = 1;
+		            		}
+	            		}else {
+	            			JOptionPane.showMessageDialog(game.getGameInfoBoard(), "Must place next to a letter!");
+	            		}
+						
 	            	}
 	            }
 				});
-				button.setBackground(Color.white);
+
 				button.setMargin( new Insets(5, 5, 5, 5) );
 				panel.setBackground(Color.white);
 				panel.setSize(50, 50);
@@ -148,17 +153,71 @@ public class board extends JPanel {
 	}
 
 	
-
-
-	//Can be used to update board when we implement that
-	public void updateBoard() {
-		for (int row = 0; row < 20; row++) {
-			for (int column = 0; column < 20; column++) {
-				//JLabel label = grid[row][column];
+	public boolean checkAdj(int rowNum,int columnNum) {
+		// The chosen tile is the starting point.
+		//check all sides then return.
+		//Return true if first turn and host no matter what
+		//surronding each with try catch because it is easy
+	
+					try {
+						if (!grid[rowNum + 1][columnNum].getText().equals("")) {
+							return true;
+						}
+					} catch (Exception e) {
+						
+						System.out.println("Nothing there");
 			
-		}
-}
+					}
+					
+				
+					
+					try {
+						if (!grid[rowNum - 1][columnNum].getText().equals("")) {
+							return true;
+						}
+					} catch (Exception e) {
+						
+						System.out.println("Nothing there");
+						
+					}
+				
+					try {
+						if (!grid[rowNum][columnNum + 1].getText().equals("")) {
+							return true;
+						}
+					} catch (Exception e) {
+						
+						System.out.println("Nothing there");
+						
+					}
+			
+					
+					try {
+						if (!grid[rowNum][columnNum -1].getText().equals("")) {
+							return true;
+						}
+					} catch (Exception e) {
+						
+						System.out.println("Nothing there");
+						
+					}
+
+					
+					//if first turn return true
+					if (game.isHost() && setFirstLetter == 0) {
+						return true;
+					}
+					
+				
+				return false;
 	}
+
+	//Can be used to update Board when we implement that
+	public void updateBoard(int rowNum,int columnNum, String letter) {
+		grid[rowNum][columnNum].setText(letter);
+		grid[rowNum][columnNum].setBackground(Color.cyan);
+	}
+
 
 	/**
 	 * we check characters that adjacent to the the chosen tile from
@@ -166,15 +225,7 @@ public class board extends JPanel {
 	 * @param rowNum
 	 * @param columnNum
 	 */
-	public void checkScore(int rowNum,int columnNum) {
-
-		int voteOrNot = JOptionPane.showConfirmDialog(
-				this,
-				"Is this a word?",
-				"confirm",
-				JOptionPane.YES_NO_OPTION);
-
-		if (voteOrNot == JOptionPane.NO_OPTION) return;
+	public void getWord(int rowNum,int columnNum) {
 
 		// The chosen tile is the starting point.
 		// There is only two cases: the word may be in the same row
@@ -182,19 +233,26 @@ public class board extends JPanel {
 		String columnWord = grid[rowNum][columnNum].getText();
 		String rowWord = grid[rowNum][columnNum].getText();
 
+		int leftColumnNum = columnNum;
+		int rightColumnNum = columnNum;
+		int aboveRowNum = rowNum;
+		int bottomRowNum = rowNum;
+
 		// Select characters below the target tile
 		for (int row = rowNum + 1; row < 20; row++) {
-			if (!grid[row][columnNum].getText().equals("") ) {
+			if (!grid[row][columnNum].getText().equals("")) {
 				columnWord = columnWord + grid[row][columnNum].getText();
+				bottomRowNum = row;
 			} else {
 				break;
 			}
 		}
 
 		// Select characters above the target tile
-		for (int row = rowNum - 1; row > 0; row--) {
-			if (!grid[row][columnNum].getText().equals("") ) {
+		for (int row = rowNum - 1; row >= 0; row--) {
+			if (!grid[row][columnNum].getText().equals("")) {
 				columnWord = grid[row][columnNum].getText() + columnWord;
+				aboveRowNum = row;
 			} else {
 				break;
 			}
@@ -202,64 +260,107 @@ public class board extends JPanel {
 
 		// Select characters on the right of the target tile
 		for (int column = columnNum + 1; column < 20; column++) {
-			if (!grid[rowNum][column].getText().equals("") ) {
+			if (!grid[rowNum][column].getText().equals("")) {
 				rowWord = rowWord + grid[rowNum][column].getText();
+				rightColumnNum = column;
 			} else {
 				break;
 			}
 		}
 
 		// Select characters on the left of the target tile
-		for (int column = columnNum - 1; column > 0; column--) {
-			if (!grid[rowNum][column].getText().equals("") ) {
+		for (int column = columnNum - 1; column >= 0; column--) {
+			if (!grid[rowNum][column].getText().equals("")) {
 				rowWord = grid[rowNum][column].getText() + rowWord;
+				leftColumnNum = column;
 			} else {
 				break;
 			}
 		}
 
 
-		String[] words = {rowWord,columnWord};
+		String[] words = {rowWord, columnWord};
 
-		String s = (String)JOptionPane.showInputDialog(
-                this,
-                "Words found are:\n"
-               ,
-                "Customized Dialog",
-                JOptionPane.PLAIN_MESSAGE,
-                null, words,
+		String s = (String) JOptionPane.showInputDialog(
+				game.getGameInfoBoard(),
+				"Words found in two directions are:\n"
+				,
+				"Words found",
+				JOptionPane.PLAIN_MESSAGE,
+				null, words,
 				words[0]);
 
-		
-		//TEMP trying out of voting
-		//default icon, custom title
+		if (s == null) return;
+
+		String index = "";
+		this.selectedWord = s;
 
 
-		// Single player should not vote in reality
-		// Just do this for testing
-		Vote vote = new Vote(2);
-		int n = JOptionPane.showConfirmDialog(
-		    this,
-		    "Do you accept this Word?",
-		    "Voting Process",
-		    JOptionPane.YES_NO_OPTION);
-		System.out.println(n);
-		if(n == 1) {
-			vote.voteNo();
-		}else {
-			vote.voteYes();
-		}
-		if (vote.votingCompleted()) {
-
-			if (vote.getResult() == true){
-				int score = s.length();
-				gameView.getGameInfoBoard().updateScore(gameView.getCurrentPlayer(), score);
-//			scores[0].setText(gui.getPlayer()+":"+score);
-				System.out.println(score);
-			}else{
-				JOptionPane.showMessageDialog(this, "Error", "Vote failed", n);
+		if (s.equals(rowWord) ) {
+			if (this.game.getMembersList().size() == 1) {
+				this.highlightCompletedWord(rowNum, leftColumnNum, rowNum, rightColumnNum);
+				this.game.getGameInfoBoard().updateScore(this.game.getCurrentPlayer(), selectedWord.length());
+			} else {
+				this.game.notifyWordAttempted(rowNum, leftColumnNum, rowNum, rightColumnNum);
+				index = rowNum + "#" + leftColumnNum + "#" + rowNum + "#" + rightColumnNum;
+				this.game.notifyInitVote(index);
+			}
+		} else {
+			if (this.game.getMembersList().size() == 1) {
+				this.highlightCompletedWord(aboveRowNum, columnNum, bottomRowNum, columnNum);
+				this.game.getGameInfoBoard().updateScore(this.game.getCurrentPlayer(), selectedWord.length());
+			} else {
+				this.game.notifyWordAttempted(aboveRowNum, columnNum, bottomRowNum, columnNum);
+				index = aboveRowNum + "#" + columnNum + "#" + bottomRowNum + "#" + columnNum;
+				this.game.notifyInitVote(index);
 			}
 		}
-		
+
+
+
+
+	}
+
+	public void setBackAttemptedWord(int startRow, int startColumn, int endRow, int endColumn) {
+		if (startRow == endRow) {
+			for (int i = startColumn; i <= endColumn; i++) {
+				grid[startRow][i].setBackground(Color.cyan);
+				grid[startRow][i].setForeground(Color.BLACK);
+			}
+		} else {
+			for (int i = startRow; i <= endRow; i++) {
+				grid[i][endColumn].setBackground(Color.cyan);
+				grid[i][endColumn].setForeground(Color.BLACK);
+			}
+		}
+	}
+
+	public void highlightCompletedWord(int startRow, int startColumn, int endRow, int endColumn) {
+		if (startRow == endRow) {
+			for (int i = startColumn; i <= endColumn; i++) {
+				grid[startRow][i].setBackground(Color.PINK);
+				grid[startRow][i].setForeground(Color.BLACK);
+			}
+		} else {
+			for (int i = startRow; i <= endRow; i++) {
+				grid[i][endColumn].setBackground(Color.PINK);
+				grid[i][endColumn].setForeground(Color.BLACK);
+			}
+		}
+	}
+
+
+	public void highlightAttemptedWord(int startRow, int startColumn, int endRow, int endColumn) {
+		if (startRow == endRow) {
+			for (int i = startColumn; i <= endColumn; i++) {
+				grid[startRow][i].setBackground(Color.RED);
+				grid[startRow][i].setForeground(Color.WHITE);
+			}
+		} else {
+			for (int i = startRow; i <= endRow; i++) {
+				grid[i][endColumn].setBackground(Color.RED);
+				grid[i][endColumn].setForeground(Color.WHITE);
+			}
+		}
 	}
 }
