@@ -10,8 +10,8 @@ import java.util.Map;
 
 public class GameInfoBoard extends JPanel{
 
-    private JLabel playerName;
-    private JLabel score;
+
+    private JPanel controlPanel = new JPanel();
     private JPanel playerListPanel = new JPanel();
     private JPanel scoreListPanel = new JPanel();
 
@@ -33,9 +33,11 @@ public class GameInfoBoard extends JPanel{
         playerListPanel.setLayout( new GridLayout(8,1));
         scoreListPanel.setLayout( new GridLayout(8,1));
 
-        add(playerListPanel, BorderLayout.WEST);
-        add(scoreListPanel, BorderLayout.EAST);
+        this.add(playerListPanel, BorderLayout.WEST);
+        this.add(scoreListPanel, BorderLayout.EAST);
 
+        JLabel playerName;
+        JLabel score;
 
         playerName = new JLabel("Players");
         score = new JLabel("Score");
@@ -45,8 +47,11 @@ public class GameInfoBoard extends JPanel{
         playerListPanel.add(playerName);
         scoreListPanel.add(score);
 
-        setBorder(BorderFactory.createEmptyBorder(10, 10, 200, 30));
+//        setBorder(BorderFactory.createEmptyBorder(10, 10, 200, 30));
+        playerListPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 30, 0));
+        scoreListPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 30, 30));
 
+        initControlButton();
         this.playerScoreMap = new HashMap<>();
         this.game = game;
 
@@ -57,11 +62,11 @@ public class GameInfoBoard extends JPanel{
         for (int i = 0; i < members.size(); i ++) {
 
             JLabel memberName = new JLabel(members.get(i));
-            memberName.setFont(new Font("Courier New", Font.BOLD, 15));
+            memberName.setFont(new Font("Arial", Font.BOLD, 15));
             playerListPanel.add(memberName);
 
             JLabel score = new JLabel("0");
-            score.setFont(new Font("Courier New", Font.BOLD, 15));
+            score.setFont(new Font("Arial", Font.BOLD, 15));
             scoreListPanel.add(score);
 
             playerScoreMap.put(members.get(i), score);
@@ -89,8 +94,25 @@ public class GameInfoBoard extends JPanel{
     	}
     	return winners;
     }
+
     public void updateScore(String playerName, int points) {
-        int currentScore = Integer.parseInt(this.playerScoreMap.get(playerName).getText());
-        this.playerScoreMap.get(playerName).setText("" + (currentScore + points));
+        int currentScore = Integer.parseInt(playerScoreMap.get(playerName).getText());
+        playerScoreMap.get(playerName).setText("" + (currentScore + points));
+    }
+
+    private void initControlButton() {
+
+        JButton voteBtn = new JButton("vote");
+        voteBtn.setFont(new Font("Arial", Font.BOLD, 16));
+
+        JButton passBtn = new JButton("pass");
+        passBtn.setFont(new Font("Arial", Font.BOLD, 16));
+
+
+        controlPanel.add(voteBtn);
+        // just add some space here
+        controlPanel.add(Box.createRigidArea(new Dimension(5,0)));
+        controlPanel.add(passBtn);
+        this.add(controlPanel, BorderLayout.SOUTH);
     }
 }

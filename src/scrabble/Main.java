@@ -20,11 +20,11 @@ public class Main extends JFrame {
 	private boolean host = false;
 	private ArrayList<String> members;
 	private String currentPlayer;
-	public Server server;
-	public Client client;
-<<<<<<< HEAD
-	private Game game;
-=======
+	public scrabble.Server server;
+	public scrabble.Client client;
+	public scrabble.MembersMenu membersMenu;
+
+
 	//just to check if client is connected to a server;
 	private int clientConnected = 0;
 	
@@ -56,16 +56,14 @@ public class Main extends JFrame {
 
 
 	private int port = 8080;
->>>>>>> origin/login-update-plus-others
+
 
 	public boolean isHost() {
 		return host;
 	}
-<<<<<<< HEAD
-=======
+
 	
-	
->>>>>>> origin/login-update-plus-others
+
 
 	/**
 	 * Set the player of the current game
@@ -139,9 +137,7 @@ public class Main extends JFrame {
 			this.server.sendMessageToAll(command);
 		}
 	}
-<<<<<<< HEAD
 
-=======
 	
 	//Update everyone due the way our architecture works i cant set to the one who requested it.
 	//I dont think it would cause any problems due to the logic of our program(will test more).
@@ -157,7 +153,7 @@ public class Main extends JFrame {
 		}
 	}
 	
->>>>>>> origin/login-update-plus-others
+
 
 	public void parseCommand(String command) {
 		System.out.println("command received is: " + command);
@@ -185,9 +181,29 @@ public class Main extends JFrame {
 				}
 				initMemberMenu();
 				break;
-<<<<<<< HEAD
-=======
-			
+
+			case "invite":
+				String inviter = commands[1];
+				String invitee = commands[2];
+				if (getPlayer().equals(invitee) && !this.membersMenu.isInvited()) {
+					this.membersMenu.initInvitationDialog(inviter);
+
+				} else if (isHost()) {
+					// resend this message to all clients
+					this.server.sendMessageToAll("invite#" + inviter + "#" + invitee);
+				}
+				break;
+
+
+			case "acceptInvitation":
+				inviter = commands[1];
+				invitee = commands[2];
+				if (inviter.equals(getPlayer())) {
+					this.membersMenu.addInvitee(invitee);
+				}
+				break;
+
+
 			//Very similar to logic of memberUpdated and all that(didnt want to
 			//touch it due to it being used in other places)
 			case "getMemberList":
@@ -201,7 +217,7 @@ public class Main extends JFrame {
 					addMember(commands[i]);
 				}
 				break;
->>>>>>> origin/login-update-plus-others
+
 
 			// should only be received by clients
 			case "startGame":
@@ -269,6 +285,29 @@ public class Main extends JFrame {
 
 	}
 
+
+	// any user send out invitation to other members
+	public void notifyInvitation(String invitee) {
+		String command = "invite#" + getPlayer() + "#" + invitee;
+		if (isHost()) {
+			this.server.sendMessageToAll(command);
+		} else {
+			this.client.sendToServer(command);
+		}
+	}
+
+	// notify inviter acceptance when player click accept
+	public void notifyAcceptInvitation(String inviter) {
+		String command = "acceptInvitation#" + inviter + "#" +getPlayer();
+		this.membersMenu.setInvited();
+		if (isHost()) {
+			this.server.sendMessageToAll(command);
+		} else {
+			this.client.sendToServer(command);
+		}
+	}
+
+
 	public void notifyServerJoiningGame() {
 		String command = "memberAdded#" + this.currentPlayer;
 		this.client.sendToServer(command);
@@ -279,8 +318,7 @@ public class Main extends JFrame {
 			}
 		});
 
-<<<<<<< HEAD
-=======
+
 }
 	//checks name (will remove value setcheck and just return)
 	public boolean checkNameTaken(String name) {
@@ -293,12 +331,12 @@ public class Main extends JFrame {
 			 setCheck(false);
 		}
 		return check;
->>>>>>> origin/login-update-plus-others
 	}
 
 
 	public void initMemberMenu() {
-		this.setContentPane(new MembersMenu(this));
+		this.membersMenu = new MembersMenu(this);
+		this.setContentPane(membersMenu);
 		this.validate();
 	}
 	/**
@@ -321,10 +359,8 @@ public class Main extends JFrame {
 								//can send info to whatever before exit
 								int exiting = 1;
 								System.out.println("exiting");
-<<<<<<< HEAD
-=======
-								
->>>>>>> origin/login-update-plus-others
+
+
 								System.exit(0);
 							}
 						}
@@ -361,12 +397,9 @@ public class Main extends JFrame {
 					//can send info to whatever before exit
 					int exiting = 1;
 					System.out.println("exiting");
-<<<<<<< HEAD
-					System.exit(0);
-=======
+
 					initCheckWinner();
 					//System.exit(0);
->>>>>>> origin/login-update-plus-others
 				}
 			}
 		});
@@ -378,32 +411,14 @@ public class Main extends JFrame {
 				JOptionPane.YES_NO_OPTION);
 
 		if (n == JOptionPane.YES_OPTION) {
-<<<<<<< HEAD
-			initServer();
-			Thread runServer = new Thread() {
-				public void run() {
-					server.runServer();
-				}
-			};
-			runServer.start();
-		} else {
-			initClient();
-			Thread runClient = new Thread() {
-				public void run() {
-					client.runClient();
-					client.sendToServer("client is here !!!!");
-				}
-			};
-			runClient.start();
-=======
+
 			//sets that this specific program is a host for login.
 			this.host = true;
 			
 		} else {
 			//set not host let login start client stuff.
 			this.host = false;
-			
->>>>>>> origin/login-update-plus-others
+
 		}
 
 		Login login = new Login(this);
@@ -412,14 +427,7 @@ public class Main extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(login);
 	}
-<<<<<<< HEAD
 
-
-	private void initServer() {
-		try {
-			this.host = true;
-			server = new Server(8080, 4, this);
-=======
 //Simple winner calculator
 	public void initCheckWinner() {
 		ArrayList<String> winners = this.game.getGameInfoBoard().checkWinner();
@@ -453,7 +461,6 @@ public class Main extends JFrame {
 		try {
 			this.host = true;
 			server = new Server(port, 4, this);
->>>>>>> origin/login-update-plus-others
 			System.out.println("init server!!");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -464,11 +471,8 @@ public class Main extends JFrame {
 
 	private void initClient() {
 		try {
-<<<<<<< HEAD
-			client = new Client(8080, "127.0.0.1", this);
-=======
 			client = new Client(port, IPaddress, this);
->>>>>>> origin/login-update-plus-others
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

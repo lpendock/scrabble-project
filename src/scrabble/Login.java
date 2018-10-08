@@ -6,19 +6,17 @@ import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-<<<<<<< HEAD
-=======
+
 import javax.swing.JOptionPane;
->>>>>>> origin/login-update-plus-others
+
 
 public class Login extends JPanel {
 	private JTextField nameField;
 	private Main main;
-<<<<<<< HEAD
-=======
+
 	private JTextField textField;
 	private JTextField textField_1;
->>>>>>> origin/login-update-plus-others
+
 
 	/**
 	 * Create the panel.
@@ -30,12 +28,7 @@ public class Login extends JPanel {
 
 		JLabel playerNameLabel = new JLabel("Name");
 		add(playerNameLabel);
-<<<<<<< HEAD
-		
-		nameField = new JTextField();
-		add(nameField);
-		nameField.setColumns(10);
-=======
+
 		
 		nameField = new JTextField();
 		add(nameField);
@@ -45,18 +38,19 @@ public class Login extends JPanel {
 		if(main.isHost() == false) {
 			JLabel lblIpAddress = new JLabel("IP Address");
 			add(lblIpAddress);
-		
-			textField = new JTextField();
+
+			// input default value
+			textField = new JTextField("127.0.0.1");
 			add(textField);
 			textField.setColumns(10);
 		}
 		JLabel lblPort = new JLabel("Port Number");
 		add(lblPort);
 		
-		textField_1 = new JTextField();
+		textField_1 = new JTextField("8080");
+
 		add(textField_1);
 		textField_1.setColumns(10);
->>>>>>> origin/login-update-plus-others
 
 		JButton nameSubmitButton = new JButton("submit");
 		nameSubmitButton.setHorizontalAlignment(SwingConstants.LEADING);
@@ -64,14 +58,7 @@ public class Login extends JPanel {
 		nameSubmitButton.addActionListener(new ActionListener() {
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
-<<<<<<< HEAD
-					main.setPlayer(nameField.getText());
-					if (!main.isHost()) {
-						main.notifyServerJoiningGame();
-					} else {
-						main.initMemberMenu();
-					}
-=======
+
 	            	if(checkPort(textField_1.getText()) == true) {
 	            		
 	            		int portnum =Integer.parseInt(textField_1.getText());
@@ -103,7 +90,6 @@ public class Login extends JPanel {
 						main.initMemberMenu();
 					}
 	            }
->>>>>>> origin/login-update-plus-others
 	            }
 	        });
 
