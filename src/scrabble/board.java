@@ -17,12 +17,15 @@ public class Board extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	private JPanel scorePanel = new JPanel();
-
 	private JPanel gridPanel = new JPanel();
 	private JButton[][] grid = new JButton[20][20];
 	private JPanel[][] squares = new JPanel[20][20];
 	private String setLetter = "";
 	private String selectedWord = "";
+	private boolean letterPlaced;
+	private int selectedRow;
+	private int selectedColumn;
+	private boolean firstHand = false;
 
 	private static final int DEFAULT_WIDTH = 800;
 	private static final int DEFAULT_HEIGHT = 800;
@@ -86,6 +89,30 @@ public class Board extends JPanel {
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
 
+					if (letterPlaced) {
+						JOptionPane.showConfirmDialog(
+								game.getGameInfoBoard(),
+								"Please place one tile at each turn",
+								"confirm",
+								JOptionPane.DEFAULT_OPTION);
+						return;
+					}
+
+	            	// return false if no neighbour
+					if (!firstHand && !hasNeighbour(rowNum,columnNum)) {
+
+						JOptionPane.showConfirmDialog(
+                        game.getGameInfoBoard(),
+                        "Please place the tile near each other",
+                        "confirm",
+                        JOptionPane.DEFAULT_OPTION);
+						return;
+					}
+					firstHand = false;
+
+
+	            	letterPlaced = true;
+
 					if (alphabetPanel.getTheChosenTile() != null) {
 						setLetter = alphabetPanel.getTheChosenTile().getText();
 					}
@@ -96,32 +123,13 @@ public class Board extends JPanel {
 						button.setBackground(Color.cyan);
 						button.setBorderPainted(false);
 						button.setOpaque(true);
-
+						selectedColumn = columnNum;
+						selectedRow = rowNum;
 	            		alphabetPanel.setNewTile();
 						game.notifyBoardChanges(rowNum,columnNum,setLetter);
 
-						int voteOrNot = JOptionPane.showConfirmDialog(
-								game.getGameInfoBoard(),
-								"Is this a word?",
-								"confirm",
-								JOptionPane.YES_NO_OPTION);
 						setLetter = "";
-						if (voteOrNot == JOptionPane.YES_OPTION) {
-							getWord(rowNum,columnNum);
-						}
 
-
-						// if there are multiple players, they have to play by turn
-						if (game.playerList.size() != 1) {
-
-							game.setPlayerTurn(false);
-
-							if (game.isHost()) {
-								game.notifyNextPlayer(game.getPlayerNextTurn(game.getCurrentPlayer()));
-							} else {
-								game.notifyCompletedTurn();
-							}
-						}
 	            	}
 	            }
 				});
@@ -246,10 +254,19 @@ public class Board extends JPanel {
 			}
 		}
 
-
-
-
 	}
+
+
+	// check whether this tile has neighbour
+	public boolean hasNeighbour(int row, int column) {
+		if (row - 1 >= 0 && !grid[row-1][column].getText().equals("")) return true;
+		if (row + 1 < 20 && !grid[row+1][column].getText().equals("")) return true;
+		if (column - 1 >= 0 && !grid[row][column-1].getText().equals("")) return true;
+		if (column + 1 < 20 && !grid[row][column+1].getText().equals("")) return true;
+
+		return false;
+	}
+
 
 	public void setBackAttemptedWord(int startRow, int startColumn, int endRow, int endColumn) {
 		if (startRow == endRow) {
@@ -293,4 +310,25 @@ public class Board extends JPanel {
 			}
 		}
 	}
+
+	public int getSelectedRow() {
+		return this.selectedRow;
+	}
+
+	public int getSelectedColumn() {
+		return this.selectedColumn;
+	}
+
+	public void setLetterPlaced(boolean bool) {
+		this.letterPlaced = bool;
+	}
+
+	public boolean isLetterPlaced() {
+		return letterPlaced;
+	}
+
+	public void setFirstHand(boolean bool) {
+		this.firstHand = bool;
+	}
+
 }

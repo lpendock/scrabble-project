@@ -19,6 +19,7 @@ public class Main extends JFrame {
 	private ArrayList<String> members;
 	private String currentPlayer;
 	private boolean isGameRunning = false;
+	public int passCount = 0;
 
 	public scrabble.Server server;
 	public scrabble.Client client;
@@ -42,22 +43,13 @@ public class Main extends JFrame {
 		//the first player in the list will start the game first
 		if (this.game.playerList.get(0).equals(getPlayer())) {
 			game.setPlayerTurn(true);
+			game.getGameBoard().setFirstHand(true);
 		}
 
 		// show game
 		game.setTitle("Scrabble -- " + currentPlayer);
 		game.setVisible(true);
 
-
-		// when game started, the member list should be fixed, so
-		// we filter out any possible null values.
-//		ArrayList<String> finalMembers = new ArrayList<>();
-//		for (String member : members) {
-//			if (member != null) {
-//				finalMembers.add(member);
-//			}
-//		}
-//		this.members = finalMembers;
 
 		game.initInfoBoard();
 		// hide the main GUI
@@ -112,13 +104,17 @@ public class Main extends JFrame {
 
 			// if host is the inviter, host have to broadcast this message
 			case "acceptInvitation":
-				inviter = commands[1];
-				invitee = commands[2];
-				if (inviter.equals(getPlayer())) {
-					this.membersMenu.addInvitee(invitee);
+				if (commands[1].equals(getPlayer())) {
+//					EventQueue.invokeLater(new Runnable() {
+//						@Override
+//						public void run() {
+//							initMemberMenu();
+//						}
+//					});
+					this.membersMenu.addInvitee(commands[2]);
 					return;
 				} else if (isHost()) {
-					this.server.sendMessageToAll("acceptInvitation#" + inviter + "#" + invitee);
+					this.server.sendMessageToAll("acceptInvitation#" + commands[1] + "#" + commands[2]);
 				}
 				break;
 
@@ -166,6 +162,14 @@ public class Main extends JFrame {
 			// should only be received by host
 			case "finishedTurn":
 				String nextPlayer = this.game.getPlayerNextTurn(commands[1]);
+				// if received "true", it means play pass the round
+				// then add the counter
+				if (commands[2].equals("true")) {
+					game.addPass();
+				} else {
+					// once it's not pass, reset the count to zero;
+					passCount = 0;
+				}
 				if (nextPlayer.equals(this.currentPlayer)) {
 					this.game.setPlayerTurn(true);
 				} else {

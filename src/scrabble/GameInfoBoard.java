@@ -4,6 +4,8 @@ package scrabble;
 import javax.swing.*;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -51,7 +53,8 @@ public class GameInfoBoard extends JPanel{
         playerListPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 30, 0));
         scoreListPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 30, 30));
 
-        statusLabel = new JLabel("Stauts");
+        statusLabel = new JLabel();
+        changeStatus(false);
         statusPanel.add(statusLabel);
         statusPanel.setBackground(Color.lightGray);
         this.add(statusPanel, BorderLayout.NORTH);
@@ -112,9 +115,86 @@ public class GameInfoBoard extends JPanel{
 
         JButton voteBtn = new JButton("vote");
         voteBtn.setFont(new Font("Arial", Font.BOLD, 16));
+        voteBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if (!game.isPlayerTurn()) {
+                    JOptionPane.showConfirmDialog(
+                            game.getGameInfoBoard(),
+                            "Please wait for your turn",
+                            "confirm",
+                            JOptionPane.DEFAULT_OPTION);
+                    return;
+                }
+
+                if (!game.getGameBoard().isLetterPlaced()) {
+                    JOptionPane.showConfirmDialog(
+                            game.getGameInfoBoard(),
+                            "Please place one tile",
+                            "confirm",
+                            JOptionPane.DEFAULT_OPTION);
+                    return;
+                }
+
+                int row = game.getGameBoard().getSelectedRow();
+                int column = game.getGameBoard().getSelectedColumn();
+                game.getGameBoard().getWord(row,column);
+                // if there are multiple players, they have to play by turn
+                if (game.playerList.size() != 1) {
+
+                    game.setPlayerTurn(false);
+
+                    if (game.isHost()) {
+                        game.notifyNextPlayer(game.getPlayerNextTurn(game.getCurrentPlayer()));
+                    } else {
+                        game.notifyCompletedTurn(false);
+                    }
+
+                }
+                game.getGameBoard().setLetterPlaced(false);
+            }
+
+        });
+
 
         JButton passBtn = new JButton("pass");
         passBtn.setFont(new Font("Arial", Font.BOLD, 16));
+        passBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if (!game.isPlayerTurn()) {
+                    JOptionPane.showConfirmDialog(
+                            game.getGameInfoBoard(),
+                            "Please wait for your turn",
+                            "confirm",
+                            JOptionPane.DEFAULT_OPTION);
+                    return;
+                }
+
+                if (game.playerList.size() != 1) {
+
+                    game.setPlayerTurn(false);
+
+                    if (game.isHost()) {
+                        game.addPass();
+                        game.notifyNextPlayer(game.getPlayerNextTurn(game.getCurrentPlayer()));
+                    } else {
+                        // if player didn't place any letter
+                        if (!game.getGameBoard().isLetterPlaced()) {
+                            game.notifyCompletedTurn(true);
+                        } else {
+                            game.notifyCompletedTurn(false);
+                        }
+                    }
+                }
+                // reset status
+                game.getGameBoard().setLetterPlaced(false);
+            }
+
+        });
+
 
         controlPanel.add(voteBtn);
         // just add some space here

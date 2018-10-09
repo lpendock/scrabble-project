@@ -74,11 +74,11 @@ public class InviteGameMenu extends JFrame {
 
         initInviteeLabels();
 
-        super.setLocationRelativeTo(main);
+
         this.getContentPane().add(parentPanel);
         this.pack();
+        this.setLocationRelativeTo(null);
     }
-
 
 
     public void initInviteeLabels() {

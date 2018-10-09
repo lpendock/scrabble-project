@@ -28,9 +28,11 @@ public class Game extends JFrame{
         parentPanel.add(this.alphabetPanel, BorderLayout.SOUTH);
         parentPanel.add(this.gameInfoBoard, BorderLayout.EAST);
 
-        super.setLocationRelativeTo(main);
+
         this.getContentPane().add(parentPanel);
         this.pack();
+        this.setLocationRelativeTo(null);
+
     }
 
 
@@ -178,9 +180,9 @@ public class Game extends JFrame{
      * --------------------------------------Player Turn---------------------------------------------
      */
 
-    public void notifyCompletedTurn() {
+    public void notifyCompletedTurn(boolean pass) {
         if (isHost()) return;
-        this.main.client.sendToServer("finishedTurn#" + this.main.getPlayer());
+        this.main.client.sendToServer("finishedTurn#" + this.main.getPlayer() + "#" + pass);
     }
 
     public String getPlayerNextTurn(String playerThisTurn) {
@@ -242,6 +244,15 @@ public class Game extends JFrame{
 
     public boolean isGameRunning() {
         return main.isGameRunning();
+    }
+
+    public void addPass() {
+        if (!isHost()) return;
+        main.passCount++;
+        if (main.passCount == this.playerList.size()) {
+            main.notifyClientsEndGame();
+            main.initCheckWinner();
+        }
     }
 
 }

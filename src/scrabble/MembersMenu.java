@@ -6,7 +6,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import static javax.swing.BoxLayout.Y_AXIS;
 
@@ -65,7 +64,7 @@ public class MembersMenu extends JPanel {
 	}
 
 
-	// todo: consider player left waiting room
+
 	public void initMemberLabelList() {
 		ArrayList<String> list = this.main.getMemberList();
 		for (String name : list) {
@@ -73,11 +72,6 @@ public class MembersMenu extends JPanel {
 			JLabel nameLabel = new JLabel(name);
 			nameLabel.setFont(new Font("Arial", Font.BOLD, 16));
 			parentPanel.add(nameLabel);
-//			if (!labelMap.containsKey(name)) {
-//
-//				labelMap.put(name, nameLabel);
-//
-//			}
 
 		}
 		// add some space (I'm lazy)

@@ -14,8 +14,8 @@ import javax.swing.SwingConstants;
 
 public class connectionMenu extends JPanel {
 	private Main main;
-	private JTextField textField;
-	private JTextField textField_1;
+	private JTextField IPaddressField;
+	private JTextField portNumField;
 
 
 	/**
@@ -25,62 +25,54 @@ public class connectionMenu extends JPanel {
 		setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		this.main = main;
 		//only show ip field if not server
-				if(main.isHost() == false) {
-					JLabel lblIpAddress = new JLabel("IP Address");
-					add(lblIpAddress);
-				
-					textField = new JTextField("127.0.0.1");
-					add(textField);
-					textField.setColumns(10);
-				}
-				JLabel lblPort = new JLabel("Port Number");
-				add(lblPort);
-				
-				textField_1 = new JTextField("8080");
-				add(textField_1);
-				textField_1.setColumns(10);
+			if(main.isHost() == false) {
+				JLabel lblIpAddress = new JLabel("IP Address");
+				add(lblIpAddress);
 
-				JButton nameSubmitButton = new JButton("submit");
-				nameSubmitButton.setHorizontalAlignment(SwingConstants.LEADING);
-				add(nameSubmitButton);
-				nameSubmitButton.addActionListener(new ActionListener() {
-			            @Override
-			            public void actionPerformed(ActionEvent e) {
-			            	if(checkPort(textField_1.getText()) == true) {
-			            		
-			            		int portnum =Integer.parseInt(textField_1.getText());
-			            		
-			            		main.setPort(portnum);
-			            		
-							if (!main.isHost()) {
-								//only connect to the server the first time.other times is just to check name
-								
-									main.setIPaddress(textField.getText());
+				IPaddressField = new JTextField("127.0.0.1");
+				add(IPaddressField);
+				IPaddressField.setColumns(10);
+			}
 
-									// if no server running then do nothing
-									if (!main.initClient()) return;
-									main.startClientProcess();
-									EventQueue.invokeLater(new Runnable() {
-										@Override
-										public void run() {
-											main.initLogin();
+			JLabel lblPort = new JLabel("Port Number");
+			add(lblPort);
 
-										}
-									});
-							
-								
-								
-							} else {
-								
-								//start the server process then go login for name input
-								main.startServerProcess();
-								main.initLogin();
-							}
-			            }
-			            }
-			        });
-				
-				
+			portNumField = new JTextField("8080");
+			add(portNumField);
+			portNumField.setColumns(10);
+
+			JButton nameSubmitButton = new JButton("submit");
+			nameSubmitButton.setHorizontalAlignment(SwingConstants.LEADING);
+			add(nameSubmitButton);
+			nameSubmitButton.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						if(checkPort(portNumField.getText()) == true) {
+
+							int portnum =Integer.parseInt(portNumField.getText());
+							main.setPort(portnum);
+
+						if (!main.isHost()) {
+							//only connect to the server the first time.other times is just to check name
+								main.setIPaddress(IPaddressField.getText());
+								// if no server running then do nothing
+								if (!main.initClient()) return;
+								main.startClientProcess();
+								EventQueue.invokeLater(new Runnable() {
+									@Override
+									public void run() {
+										main.initLogin();
+									}
+								});
+						}
+						else {
+							//start the server process then go login for name input
+							main.startServerProcess();
+							main.initLogin();
+						}
+					}
+					}
+				});
 
 	}
 	
