@@ -56,7 +56,9 @@ public class connectionMenu extends JPanel {
 								//only connect to the server the first time.other times is just to check name
 								
 									main.setIPaddress(textField.getText());
-									
+
+									// if no server running then do nothing
+									if (!main.initClient()) return;
 									main.startClientProcess();
 									EventQueue.invokeLater(new Runnable() {
 										@Override

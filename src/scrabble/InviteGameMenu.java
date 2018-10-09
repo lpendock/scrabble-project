@@ -17,6 +17,7 @@ public class InviteGameMenu extends JFrame {
     private ArrayList<String> inviteeList;
     private ArrayList<String> displayedLabels = new ArrayList<>();
 
+
     public InviteGameMenu(Main main) {
         this.main = main;
         this.memberMenu = main.membersMenu;
@@ -46,6 +47,7 @@ public class InviteGameMenu extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 main.startGame();
+                main.membersMenu.getInviteGameMenu().setVisible(false);
             }
         });
         startButton.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -72,6 +74,8 @@ public class InviteGameMenu extends JFrame {
         this.getContentPane().add(parentPanel);
         this.pack();
     }
+
+
 
     public void initInviteeLabels() {
         for (String invitee : inviteeList) {
