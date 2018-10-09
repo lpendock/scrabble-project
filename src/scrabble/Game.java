@@ -12,8 +12,7 @@ public class Game extends JFrame{
     private GameInfoBoard gameInfoBoard;
     private boolean playerTurn;
     private Vote vote;
-    private int numberOfPlayer;
-    private ArrayList<String> playerList;
+    protected ArrayList<String> playerList;
 
     public Game(Main main) {
 
@@ -48,7 +47,7 @@ public class Game extends JFrame{
         // should only be called by server
         if (!isHost()) return;
 
-        this.vote = new Vote(this.getMembersList().size(), voteInitiator, word);
+        this.vote = new Vote(this.playerList.size(), voteInitiator, word);
         this.main.server.sendMessageToAll("initVote#" + voteInitiator);
 
     }
@@ -185,11 +184,11 @@ public class Game extends JFrame{
     }
 
     public String getPlayerNextTurn(String playerThisTurn) {
-        int index = this.getMembersList().indexOf(playerThisTurn);
-        if (index == this.getMembersList().size() - 1) {
-            return this.getMembersList().get(0);
+        int index = this.playerList.indexOf(playerThisTurn);
+        if (index == this.playerList.size() - 1) {
+            return this.playerList.get(0);
         } else {
-            return this.getMembersList().get(index + 1);
+            return this.playerList.get(index + 1);
         }
     }
 
@@ -234,10 +233,6 @@ public class Game extends JFrame{
 
     public String getCurrentPlayer() {
         return main.getPlayer();
-    }
-
-    public void setNumberOfPlayer(int number) {
-        this.numberOfPlayer = number;
     }
 
     public ArrayList<String> getMembersList() {

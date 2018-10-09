@@ -40,7 +40,7 @@ public class Main extends JFrame {
 		this.isGameRunning = true;
 
 		//the first player in the list will start the game first
-		if (members.get(0).equals(getPlayer())) {
+		if (this.game.playerList.get(0).equals(getPlayer())) {
 			game.setPlayerTurn(true);
 		}
 
@@ -142,21 +142,18 @@ public class Main extends JFrame {
 
 				if (isHost()) {
 					//notify all clients to start the game
-					this.game.setNumberOfPlayer(commands.length - 1);
 					this.server.sendMessageToAll(command);
+				}
+
+				//update player list to play list: those who play the game
+				this.game.playerList = new ArrayList<>();
+				for (int j = 1; j < commands.length; j++) {
+					this.game.playerList.add(commands[j]);
 				}
 
 				for (int i = 1; i < commands.length; i ++) {
 					// if this player is invited to the game
 					if (commands[i].equals(getPlayer())) {
-
-						//update member list to play list: those who play the game
-						this.members = new ArrayList<>();
-						for (int j = 1; j < commands.length; j++) {
-							addMember(commands[j]);
-						}
-
-
 
 						startGame();
 						return;
@@ -364,6 +361,7 @@ public class Main extends JFrame {
 
 	//Simple winner calculator
 	public void initCheckWinner() {
+		if (!isGameRunning()) return;
 		ArrayList<String> winners = this.game.getGameInfoBoard().checkWinner();
 		JOptionPane.showMessageDialog(this, "Winners is/are "+ winners);
 
@@ -411,6 +409,7 @@ public class Main extends JFrame {
 						initCheckWinner();
 					} else {
 						notifyExitGame();
+						notifyLogout();
 					}
 
 					System.out.println("exiting");

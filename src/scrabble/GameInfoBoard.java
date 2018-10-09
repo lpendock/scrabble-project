@@ -58,7 +58,7 @@ public class GameInfoBoard extends JPanel{
     }
 
     public void initPlayerInfo() {
-        this.members = game.getMembersList();
+        this.members = game.playerList;
         for (int i = 0; i < members.size(); i ++) {
 
             JLabel memberName = new JLabel(members.get(i));

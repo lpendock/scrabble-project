@@ -112,7 +112,7 @@ public class Board extends JPanel {
 
 
 						// if there are multiple players, they have to play by turn
-						if (game.getMembersList().size() != 1) {
+						if (game.playerList.size() != 1) {
 
 							game.setPlayerTurn(false);
 
@@ -227,7 +227,7 @@ public class Board extends JPanel {
 
 
 		if (s.equals(rowWord) ) {
-			if (this.game.getMembersList().size() == 1) {
+			if (this.game.playerList.size() == 1) {
 				this.highlightCompletedWord(rowNum, leftColumnNum, rowNum, rightColumnNum);
 				this.game.getGameInfoBoard().updateScore(this.game.getCurrentPlayer(), selectedWord.length());
 			} else {
@@ -236,7 +236,7 @@ public class Board extends JPanel {
 				this.game.notifyInitVote(index);
 			}
 		} else {
-			if (this.game.getMembersList().size() == 1) {
+			if (this.game.playerList.size() == 1) {
 				this.highlightCompletedWord(aboveRowNum, columnNum, bottomRowNum, columnNum);
 				this.game.getGameInfoBoard().updateScore(this.game.getCurrentPlayer(), selectedWord.length());
 			} else {
