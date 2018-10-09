@@ -14,7 +14,8 @@ public class GameInfoBoard extends JPanel{
     private JPanel controlPanel = new JPanel();
     private JPanel playerListPanel = new JPanel();
     private JPanel scoreListPanel = new JPanel();
-
+    private JPanel statusPanel = new JPanel();
+    private JLabel statusLabel = new JLabel();
     private static final int DEFAULT_WIDTH = 200;
     private static final int DEFAULT_HEIGHT = 400;
 
@@ -47,9 +48,13 @@ public class GameInfoBoard extends JPanel{
         playerListPanel.add(playerName);
         scoreListPanel.add(score);
 
-//        setBorder(BorderFactory.createEmptyBorder(10, 10, 200, 30));
         playerListPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 30, 0));
         scoreListPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 30, 30));
+
+        statusLabel = new JLabel("Stauts");
+        statusPanel.add(statusLabel);
+        statusPanel.setBackground(Color.lightGray);
+        this.add(statusPanel, BorderLayout.NORTH);
 
         initControlButton();
         this.playerScoreMap = new HashMap<>();
@@ -101,6 +106,8 @@ public class GameInfoBoard extends JPanel{
         playerScoreMap.get(playerName).setText("" + (currentScore + points));
     }
 
+
+    // init vote button and pass button
     private void initControlButton() {
 
         JButton voteBtn = new JButton("vote");
@@ -109,11 +116,24 @@ public class GameInfoBoard extends JPanel{
         JButton passBtn = new JButton("pass");
         passBtn.setFont(new Font("Arial", Font.BOLD, 16));
 
-
         controlPanel.add(voteBtn);
         // just add some space here
         controlPanel.add(Box.createRigidArea(new Dimension(5,0)));
         controlPanel.add(passBtn);
         this.add(controlPanel, BorderLayout.SOUTH);
+    }
+
+    // use boolean value to represent whether it is current player's turn
+    public void changeStatus(boolean turn) {
+        if (turn) {
+            statusLabel.setText("Your Turn");
+            statusLabel.setFont(new Font("Arial", Font.PLAIN, 26));
+            statusLabel.setForeground(Color.blue);
+        } else {
+            statusLabel.setText("Wait");
+            statusLabel.setFont(new Font("Arial", Font.PLAIN, 26));
+            statusLabel.setForeground(Color.RED);
+        }
+        statusPanel.revalidate();
     }
 }

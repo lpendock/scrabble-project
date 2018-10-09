@@ -258,6 +258,8 @@ public class Main extends JFrame {
 		}
 		if (isHost()) {
 			this.server.sendMessageToAll(command);
+			this.game.playerList = membersMenu.getInviteeList();
+			startGame();
 		} else {
 			this.client.sendToServer(command);
 		}

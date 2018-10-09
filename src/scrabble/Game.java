@@ -200,6 +200,7 @@ public class Game extends JFrame{
 
     public void setPlayerTurn(boolean bool) {
         this.playerTurn = bool;
+        this.getGameInfoBoard().changeStatus(bool);
     }
 
     public boolean isPlayerTurn() {
