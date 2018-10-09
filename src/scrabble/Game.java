@@ -12,6 +12,8 @@ public class Game extends JFrame{
     private GameInfoBoard gameInfoBoard;
     private boolean playerTurn;
     private Vote vote;
+    private int numberOfPlayer;
+    private ArrayList<String> playerList;
 
     public Game(Main main) {
 
@@ -19,6 +21,8 @@ public class Game extends JFrame{
         this.gameBoard = new Board(this);
         this.gameInfoBoard = new GameInfoBoard(this);
         this.main = main;
+        playerList = new ArrayList<>();
+
         JPanel parentPanel = new JPanel();
         parentPanel.setLayout(new BorderLayout());
         parentPanel.add(this.gameBoard, BorderLayout.CENTER);
@@ -232,8 +236,16 @@ public class Game extends JFrame{
         return main.getPlayer();
     }
 
+    public void setNumberOfPlayer(int number) {
+        this.numberOfPlayer = number;
+    }
+
     public ArrayList<String> getMembersList() {
         return main.getMemberList();
+    }
+
+    public boolean isGameRunning() {
+        return main.isGameRunning();
     }
 
 }

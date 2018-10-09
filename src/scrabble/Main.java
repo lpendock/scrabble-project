@@ -138,9 +138,13 @@ public class Main extends JFrame {
 				break;
 
 
-			// should only be received by clients
 			case "startGame":
 
+				if (isHost()) {
+					//notify all clients to start the game
+					this.game.setNumberOfPlayer(commands.length - 1);
+					this.server.sendMessageToAll(command);
+				}
 
 				for (int i = 1; i < commands.length; i ++) {
 					// if this player is invited to the game
@@ -151,14 +155,14 @@ public class Main extends JFrame {
 						for (int j = 1; j < commands.length; j++) {
 							addMember(commands[j]);
 						}
-						if (isHost()) {
-							//notify all clients to start the game
-							this.server.sendMessageToAll(command);
-						}
+
+
+
 						startGame();
 						return;
 					}
 				}
+
 
 				break;
 
@@ -196,7 +200,7 @@ public class Main extends JFrame {
 				}
 
 				// all players except the initiator should vote
-				if (!this.currentPlayer.equals(commands[1])) {
+				if (!this.currentPlayer.equals(commands[1]) && isGameRunning()) {
 					this.game.displayVote();
 				}
 				break;

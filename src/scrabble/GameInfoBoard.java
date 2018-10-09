@@ -96,6 +96,7 @@ public class GameInfoBoard extends JPanel{
     }
 
     public void updateScore(String playerName, int points) {
+        if (!game.isGameRunning()) return;
         int currentScore = Integer.parseInt(playerScoreMap.get(playerName).getText());
         playerScoreMap.get(playerName).setText("" + (currentScore + points));
     }
