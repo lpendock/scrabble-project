@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static javax.swing.BoxLayout.Y_AXIS;
 
@@ -14,20 +15,22 @@ public class MembersMenu extends JPanel {
 	//Might want to use an actual arraylist to save members?(do we need that anywhere else?)
 	//ArrayList<String> members = new ArrayList<String>();
 	private JPanel parentPanel;
-	private JLabel[] memberLabels;
 	private Main main;
 	private InviteGameMenu inviteGameMenu;
 	private boolean invited = false;
 	private JButton initButton;
 	private JLabel messageLabel = new JLabel();
 	private ArrayList<String> inviteeList;
+
+
+
+
 	/**
 	 * Create the panel.
 	 * @param main
 	 */
 	public MembersMenu(Main main) {
 		this.main = main;
-		this.memberLabels = new JLabel[8];
 		this.inviteeList = new ArrayList<>();
 
 		parentPanel = new JPanel();
@@ -66,16 +69,23 @@ public class MembersMenu extends JPanel {
 	public void initMemberLabelList() {
 		ArrayList<String> list = this.main.getMemberList();
 		for (String name : list) {
-			if (name!= null) {
-				JLabel nameLabel = new JLabel(name);
-				nameLabel.setFont(new Font("Arial", Font.BOLD, 16));
-				parentPanel.add(nameLabel);
-			}
+			if (name == null) continue;
+			JLabel nameLabel = new JLabel(name);
+			nameLabel.setFont(new Font("Arial", Font.BOLD, 16));
+			parentPanel.add(nameLabel);
+//			if (!labelMap.containsKey(name)) {
+//
+//				labelMap.put(name, nameLabel);
+//
+//			}
+
 		}
 		// add some space (I'm lazy)
 		parentPanel.add(new JLabel("   "));
 
 	}
+
+
 
 	public void initInvitationDialog(String inviter) {
 		int n = JOptionPane.showConfirmDialog(

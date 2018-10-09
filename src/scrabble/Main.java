@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 import javax.swing.*;
@@ -213,7 +214,10 @@ public class Main extends JFrame {
 				break;
 
 			case "logout":
-				// todo: handle logout memberMenu
+				memberLogout(commands[1]);
+				notifyClientsMemberChanges();
+				initMemberMenu();
+				break;
 		}
 
 	}
@@ -237,6 +241,7 @@ public class Main extends JFrame {
 		this.client.sendToServer(command);
 	}
 
+	// client notify server before close
 	public void notifyLogout() {
 		String command = "logout#" + getPlayer();
 		this.client.sendToServer(command);
@@ -359,18 +364,14 @@ public class Main extends JFrame {
 						JOptionPane.YES_NO_OPTION,
 						JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
 
-					if (isGameRunning()) {
-						// all player end game
-						if(isHost()) {
-							notifyClientsEndGame();
-							initCheckWinner();
-						} else {
-							notifyExitGame();
-						}
-					}else {
-						// won't affect other players
-						notifyLogout();
+					// all player end game
+					if(isHost()) {
+						notifyClientsEndGame();
+						initCheckWinner();
+					} else {
+						notifyExitGame();
 					}
+
 					System.out.println("exiting");
 				}
 			}
@@ -487,6 +488,11 @@ public class Main extends JFrame {
 		members.add(name);
 	}
 
+	public void memberLogout(String member) {
+		members.remove(member);
+		members.removeAll(Collections.singleton(null));
+	}
+
 	/**
 	 * Set the player of the current game
 	 * @param playerName name of the player
@@ -570,10 +576,10 @@ public class Main extends JFrame {
 										// if logged in
 										if (!frame.getMemberList().isEmpty()) {
 											frame.notifyLogout();
-										} else {
-											// non-login just exit
-											System.exit(0);
 										}
+											// non-login just exit
+										System.exit(0);
+
 
 									}
 								}
