@@ -28,7 +28,7 @@ public class Login extends JPanel {
 		nameField = new JTextField();
 		add(nameField);
 		nameField.setColumns(10);
-		
+		/**
 		//only show ip field if not server
 		if(main.isHost() == false) {
 			JLabel lblIpAddress = new JLabel("IP Address");
@@ -44,27 +44,16 @@ public class Login extends JPanel {
 		textField_1 = new JTextField();
 		add(textField_1);
 		textField_1.setColumns(10);
-
+**/
 		JButton nameSubmitButton = new JButton("submit");
 		nameSubmitButton.setHorizontalAlignment(SwingConstants.LEADING);
 		add(nameSubmitButton);
 		nameSubmitButton.addActionListener(new ActionListener() {
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
-	            	if(checkPort(textField_1.getText()) == true) {
-	            		
-	            		int portnum =Integer.parseInt(textField_1.getText());
-	            		main.setPort(portnum);
-	            		
+	            	//checks if host or not then do relevant stuff
 					if (!main.isHost()) {
-						//only connect to the server the first time.other times is just to check name
-						if(main.getClientConnected() == 0) {
-							main.setIPaddress(textField.getText());
-							//main.setPlayer(nameField.getText());
-							main.startClientProcess();
-						}
 						
-						String command = "getMemberList" ;
 						main.client.sendToServer("getMemberList");
 						EventQueue.invokeLater(new Runnable() {
 							@Override
@@ -75,14 +64,14 @@ public class Login extends JPanel {
 						
 						
 						
+						
 					} else {
 						main.setPlayer(nameField.getText());
-						//start the server process then do member menu stuff
-						main.startServerProcess();
+						// do member menu stuff
 						main.initMemberMenu();
 					}
 	            }
-	            }
+	          //  }
 	        });
 
 	}
