@@ -29,14 +29,14 @@ public class connectionMenu extends JPanel {
 					JLabel lblIpAddress = new JLabel("IP Address");
 					add(lblIpAddress);
 				
-					textField = new JTextField();
+					textField = new JTextField("127.0.0.1");
 					add(textField);
 					textField.setColumns(10);
 				}
 				JLabel lblPort = new JLabel("Port Number");
 				add(lblPort);
 				
-				textField_1 = new JTextField();
+				textField_1 = new JTextField("8080");
 				add(textField_1);
 				textField_1.setColumns(10);
 

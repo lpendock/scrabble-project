@@ -18,7 +18,8 @@ public class MembersMenu extends JPanel {
 	private Main main;
 	private InviteGameMenu inviteGameMenu;
 	private boolean invited = false;
-
+	private JButton initButton;
+	private JLabel messageLabel = new JLabel();
 	/**
 	 * Create the panel.
 	 * @param main
@@ -41,7 +42,7 @@ public class MembersMenu extends JPanel {
 
 		initMemberLabelList();
 
-		JButton initButton = new JButton("Initiate a Game");
+		initButton = new JButton("Initiate a Game");
 		parentPanel.add(initButton);
 		initButton.addActionListener(new ActionListener() {
 				@Override
@@ -52,6 +53,8 @@ public class MembersMenu extends JPanel {
 			});
 
 		initButton.setAlignmentY(Component.CENTER_ALIGNMENT);
+
+		parentPanel.add(messageLabel);
 		this.add(parentPanel);
 	}
 
@@ -99,5 +102,13 @@ public class MembersMenu extends JPanel {
 	
 	public void setInvited() {
 		this.invited = true;
+	}
+
+	public void banInvitationFunction() {
+		initButton.setEnabled(false);
+		messageLabel.setText("You have accepted invitation.\nPlease wait for others.");
+		messageLabel.setFont(new Font("Arial", Font.BOLD, 20));
+		messageLabel.setForeground(Color.BLUE);
+
 	}
 }

@@ -217,17 +217,17 @@ public class Main extends JFrame {
 
 			//Very similar to logic of memberUpdated and all that(didnt want to
 			//touch it due to it being used in other places)
-//			case "getMemberList":
-//				System.out.println("sending list");
-//				 notifyClientsMemberList();
-//				break;
-//
-//			case "updateMemberList":
-//				this.members = new ArrayList<>();
-//				for (int i = 1; i < commands.length; i++) {
-//					addMember(commands[i]);
-//				}
-//				break;
+			case "getMemberList":
+				System.out.println("sending list");
+				 notifyClientsMemberList();
+				break;
+
+			case "updateMemberList":
+				this.members = new ArrayList<>();
+				for (int i = 1; i < commands.length; i++) {
+					addMember(commands[i]);
+				}
+				break;
 
 
 			// should only be received by clients
@@ -311,6 +311,7 @@ public class Main extends JFrame {
 	public void notifyAcceptInvitation(String inviter) {
 		String command = "acceptInvitation#" + inviter + "#" +getPlayer();
 		this.membersMenu.setInvited();
+		this.membersMenu.banInvitationFunction();
 		if (isHost()) {
 			this.server.sendMessageToAll(command);
 		} else {
