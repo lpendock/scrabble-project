@@ -1,52 +1,67 @@
 package scrabble;
 
 /**
- * Server should create a Vote instance when player initate a vote.
+ * Server should create a Vote instance when player initiate a vote.
  * author: Zuodong
  */
 public class Vote {
 
 
-    // 0.7 would be too high I guess
-    private final double MAJORITY_RATIO = 0.6;
-    private int majority;
-    private int playerNums;
+    private int threshold;
     private int yesCount = 0;
     private int noCount = 0;
-    private boolean finalResult;
-
-
-    // Just for testing, to see the calculating result.
-    public void getMajority () {
-        System.out.println(this.majority);
-    }
+    private String initiator;
+    private String targetWord;
+    private String index;
 
 
     /**
      * The constructor should be provided with the number of player of the game
-     * We want the number of majority people to be a reasonable integer, so we
-     * choose the ceiling value. (floor value may lead to bad outcome)
+     * and the initiator of the Vote.We want the number of majority people to
+     * be a reasonable integer, so we choose the ceiling value.
+     * (floor value may lead to bad outcome)
      */
-    public Vote(int numberOfPlayer) {
-        this.playerNums = numberOfPlayer;
-        /**
-         * Explanation for the formula (a little bit wordy):
-         * The player who initiated the game should not
-         * engage in voting, so the total player number has to minus one.
-         * The double value was down cast to int value first, and then
-         * plus one so we can get the ceiling value of original result.
-         */
-        this.majority = (int)((playerNums - 1) * MAJORITY_RATIO) + 1;
+    public Vote(int numberOfPlayer, String playerName, String targetWord) {
+        this.initiator = playerName;
+        this.targetWord = targetWord;
+        this.threshold = numberOfPlayer - 1;
     }
 
 
+    public String getTargetWord() {
+        return this.targetWord;
+    }
+
+
+    /**
+     * store grid index of the target word.
+     * @param index
+     */
+    public void setIndex(String index) {
+        this.index = index;
+    }
+
+    public String getIndex() {
+        return this.index;
+    }
+    /**
+     * Return the initiator of this vote.
+     * @return
+     */
+    public String getInitiator() {
+        return this.initiator;
+    }
 
     /**
      * This should be called only when the voting is completed
      * @return the final result of the vote
      */
-    public boolean getResult() {
-        return finalResult;
+    public boolean getResult(){
+        if (yesCount >= noCount) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 
@@ -57,19 +72,9 @@ public class Vote {
      */
     public boolean votingCompleted() {
 
-        // Majority has accepted the word
-        if (yesCount >= majority) {
-            finalResult = true;
+        if (yesCount + noCount == threshold) {
             return true;
         }
-
-        // Enough people vote against the word so that
-        // the voting could be ended immediately.
-        if (noCount > playerNums - majority) {
-            finalResult = false;
-            return true;
-        }
-
         // No result yet
         return false;
     }

@@ -1,53 +1,104 @@
 package scrabble;
 
-import javax.swing.JPanel;
-import javax.swing.JRootPane;
+import javax.swing.*;
 
+import java.awt.EventQueue;
 import java.awt.FlowLayout;
-import javax.swing.JTextField;
-import javax.swing.JLabel;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.BorderLayout;
-import java.awt.Color;
-
-import javax.swing.JButton;
-import javax.swing.SwingConstants;
-
-import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 
 public class Login extends JPanel {
+	private JTextField nameField;
+	private Main main;
 	private JTextField textField;
-	private GUI_main gui;
+	private JTextField textField_1;
 
 	/**
 	 * Create the panel.
-	 * @param gui_main 
+	 * @param main
 	 */
-	public Login(GUI_main gui_main) {
+	public Login(Main main) {
 		setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		gui = gui_main;
-		JLabel lblNewLabel = new JLabel("Name");
-		add(lblNewLabel);
+		this.main = main;
+
+		JLabel playerNameLabel = new JLabel("Name");
+		add(playerNameLabel);
 		
-		textField = new JTextField();
-		add(textField);
-		textField.setColumns(10);
+		nameField = new JTextField();
+		add(nameField);
+		nameField.setColumns(10);
+		/**
+		//only show ip field if not server
+		if(main.isHost() == false) {
+			JLabel lblIpAddress = new JLabel("IP Address");
+			add(lblIpAddress);
 		
-		JButton btnNewButton = new JButton("submit");
-		btnNewButton.setHorizontalAlignment(SwingConstants.LEADING);
-		add(btnNewButton);
-		  btnNewButton.addActionListener(new ActionListener() {
+			textField = new JTextField();
+			add(textField);
+			textField.setColumns(10);
+		}
+		JLabel lblPort = new JLabel("Port Number");
+		add(lblPort);
+		
+		textField_1 = new JTextField();
+		add(textField_1);
+		textField_1.setColumns(10);
+**/
+		JButton nameSubmitButton = new JButton("submit");
+		nameSubmitButton.setHorizontalAlignment(SwingConstants.LEADING);
+		add(nameSubmitButton);
+		nameSubmitButton.addActionListener(new ActionListener() {
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
-	            	//gui.setPlayers(Integer.parseInt(textField_1.getText()));
-	            	gui.setPlayer(textField.getText());
-	            	gui.changePanel(3);
-	                
+	            	//checks if host or not then do relevant stuff
+					if (!main.isHost()) {
+						
+						main.client.sendToServer("getMemberList");
+						EventQueue.invokeLater(new Runnable() {
+							@Override
+							public void run() {
+								checkName();
+							}
+						});
+						
+						
+						
+						
+					} else {
+						main.setPlayer(nameField.getText());
+						// do member menu stuff
+						main.initMemberMenu();
+					}
 	            }
+	          //  }
 	        });
 
 	}
+	
+	//checks to make sure port is number
+	private boolean checkPort(String port) {
+		int portnum;
+		try {
+			portnum = Integer.parseInt(port);
+		} catch (NumberFormatException e) {
+			JOptionPane.showMessageDialog(this, "Port has to be a number!");
+			return false;
+		}
+		return true;
+	}
+	
+	private void checkName() {
+		if(main.checkNameTaken(nameField.getText())) {
+			JOptionPane.showMessageDialog(main, "Name taken,choose another");
+		}else {
+			System.out.println("moving to menu");
+			//reset currentplayer to new name
+			main.setPlayer(nameField.getText());
+			main.notifyServerJoiningGame();
+		}
+	}
+
+	
 
 }
