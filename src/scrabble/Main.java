@@ -39,10 +39,11 @@ public class Main extends JFrame {
 
 		this.isGameRunning = true;
 
-		if (host) {
+		//the first player in the list will start the game first
+		if (members.get(0).equals(getPlayer())) {
 			game.setPlayerTurn(true);
-			this.server.sendMessageToAll("startGame");
 		}
+
 		// show game
 		game.setTitle("Scrabble -- " + currentPlayer);
 		game.setVisible(true);
@@ -50,13 +51,13 @@ public class Main extends JFrame {
 
 		// when game started, the member list should be fixed, so
 		// we filter out any possible null values.
-		ArrayList<String> finalMembers = new ArrayList<>();
-		for (String member : members) {
-			if (member != null) {
-				finalMembers.add(member);
-			}
-		}
-		this.members = finalMembers;
+//		ArrayList<String> finalMembers = new ArrayList<>();
+//		for (String member : members) {
+//			if (member != null) {
+//				finalMembers.add(member);
+//			}
+//		}
+//		this.members = finalMembers;
 
 		game.initInfoBoard();
 		// hide the main GUI
@@ -139,7 +140,26 @@ public class Main extends JFrame {
 
 			// should only be received by clients
 			case "startGame":
-				startGame();
+
+
+				for (int i = 1; i < commands.length; i ++) {
+					// if this player is invited to the game
+					if (commands[i].equals(getPlayer())) {
+
+						//update member list to play list: those who play the game
+						this.members = new ArrayList<>();
+						for (int j = 1; j < commands.length; j++) {
+							addMember(commands[j]);
+						}
+						if (isHost()) {
+							//notify all clients to start the game
+							this.server.sendMessageToAll(command);
+						}
+						startGame();
+						return;
+					}
+				}
+
 				break;
 
 			// should only be received by host
@@ -225,6 +245,23 @@ public class Main extends JFrame {
 	/**
 	 * --------------------------------------Notification-------------------------------------------------
 	 */
+
+
+	// notify host or clients the game start with certain members
+	public void notifyGameStart() {
+		String command = "startGame";
+		for (String member : membersMenu.getInviteeList() ){
+			if (member != null) {
+				command = command + "#" + member;
+			}
+		}
+		if (isHost()) {
+			this.server.sendMessageToAll(command);
+		} else {
+			this.client.sendToServer(command);
+		}
+	}
+
 
 	// should only be called by server
 	// every player has to end the game

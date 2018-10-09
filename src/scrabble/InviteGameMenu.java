@@ -46,7 +46,11 @@ public class InviteGameMenu extends JFrame {
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                main.startGame();
+                // todo: notify invitees to start game;
+                inviteeList.add(main.getPlayer());
+                main.notifyGameStart();
+
+//                main.startGame();
                 main.membersMenu.getInviteGameMenu().setVisible(false);
             }
         });
