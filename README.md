@@ -9,3 +9,4 @@
 6. simple adjacent checking for letters
 7. simple winner display on close(on program only)
 8. hopefully nothing is broken
+9.THINGS SHOULD BE FIXED NOW(new connection panel)

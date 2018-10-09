@@ -46,12 +46,15 @@ public class Main extends JFrame {
 	private String IPaddress = "127.0.0.1";
 	public void setIPaddress(String iPaddress) {
 		IPaddress = iPaddress;
+		System.out.println("ip set to: "+IPaddress);
 	}
 
 
 
 	public void setPort(int port) {
+		
 		this.port = port;
+		System.out.println("Port set to: "+port);
 	}
 
 
@@ -134,6 +137,7 @@ public class Main extends JFrame {
 					command = command + "#" + name;
 				}
 			}
+			System.out.println("sending names to clients! ");
 			this.server.sendMessageToAll(command);
 		}
 	}
@@ -141,17 +145,21 @@ public class Main extends JFrame {
 	
 	//Update everyone due the way our architecture works i cant set to the one who requested it.
 	//I dont think it would cause any problems due to the logic of our program(will test more).
-//	public void notifyClientsMemberList() {
-//		if (this.isHost()) {
-//			String command = "updateMemberList";
-//			for (String name : members) {
-//				if (name!=null) {
-//					command = command + "#" + name;
-//				}
-//			}
-//			this.server.sendMessageToAll(command);
-//		}
-//	}
+
+	public void notifyClientsMemberList() {
+		if (this.isHost()) {
+			
+			String command = "updateMemberList";
+			for (String name : members) {
+				if (name!=null) {
+					command = command + "#" + name;
+				}
+			}
+			
+			this.server.sendMessageToAll(command);
+		}
+	}
+
 	
 
 
@@ -169,6 +177,7 @@ public class Main extends JFrame {
 				break;
 
 			case "memberAdded":
+				System.out.println("got name from client!");
 				addMember(commands[1]);
 				// only host can send this message
 				notifyClientsMemberChanges();
@@ -180,6 +189,7 @@ public class Main extends JFrame {
 				for (int i = 1; i < commands.length; i++) {
 					addMember(commands[i]);
 				}
+				System.out.println("updated members list,refreshing memberMenu");
 				initMemberMenu();
 				break;
 
@@ -311,6 +321,7 @@ public class Main extends JFrame {
 
 	public void notifyServerJoiningGame() {
 		String command = "memberAdded#" + this.currentPlayer;
+		System.out.println("sending name to server!");
 		this.client.sendToServer(command);
 		EventQueue.invokeLater(new Runnable() {
 			@Override
@@ -338,6 +349,12 @@ public class Main extends JFrame {
 	public void initMemberMenu() {
 		this.membersMenu = new MembersMenu(this);
 		this.setContentPane(membersMenu);
+		this.validate();
+	}
+	
+	
+	public void initLogin() {
+		this.setContentPane(new Login(this));
 		this.validate();
 	}
 	/**
@@ -422,11 +439,12 @@ public class Main extends JFrame {
 
 		}
 
-		Login login = new Login(this);
+		//start at connectionMenu first
+		connectionMenu con = new connectionMenu(this);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
-		setContentPane(login);
+		setContentPane(con);
 	}
 
 //Simple winner calculator
@@ -456,7 +474,9 @@ public class Main extends JFrame {
 			}
 		};
 		runClient.start();
+		//might not need this anymore
 		clientConnected = 1;
+		
 	}
 	private void initServer() {
 		try {
