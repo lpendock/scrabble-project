@@ -13,17 +13,18 @@ public class InviteGameMenu extends JFrame {
 
     private JPanel parentPanel;
     private MembersMenu memberMenu;
-    private ArrayList<String> inviteeList;
     private Main main;
-
+    private ArrayList<String> inviteeList;
+    private ArrayList<String> displayedLabels = new ArrayList<>();
 
     public InviteGameMenu(Main main) {
         this.main = main;
+        this.memberMenu = main.membersMenu;
         parentPanel = new JPanel();
         parentPanel.setLayout(new BoxLayout(parentPanel, BoxLayout.Y_AXIS));
 
         parentPanel.setPreferredSize(new Dimension(400, 600));
-        inviteeList = new ArrayList<>();
+        inviteeList = memberMenu.getInviteeList();
 
         // add some space
         parentPanel.add(new JLabel("   "));
@@ -57,15 +58,32 @@ public class InviteGameMenu extends JFrame {
         parentPanel.add(inviteeName);
 
 
+        // close invitation window will reset init button
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                memberMenu.resetInvitBtn();
+            }
+        });
+
+        initInviteeLabels();
+
+        super.setLocationRelativeTo(main);
         this.getContentPane().add(parentPanel);
         this.pack();
     }
 
     public void initInviteeLabels() {
         for (String invitee : inviteeList) {
+            // if this name has been displayed then ignore it
+            if (displayedLabels.contains(invitee)) continue;
             JLabel inviteeLabel = new JLabel(invitee);
+            // add to displayed list to avoid duplicates
+            displayedLabels.add(invitee);
+
             inviteeLabel.setFont(new Font("Arial", Font.BOLD, 18));
             inviteeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            inviteeLabel.setForeground(Color.BLUE);
             parentPanel.add(inviteeLabel);
         }
         this.pack();
@@ -90,7 +108,7 @@ public class InviteGameMenu extends JFrame {
         if (memberNames.length == 0) {
             JOptionPane.showConfirmDialog(parentPanel,
                     "There is no other member available","OK",
-                    JOptionPane.YES_OPTION,
+                    JOptionPane.DEFAULT_OPTION,
                     JOptionPane.QUESTION_MESSAGE);
             return;
         }
@@ -104,10 +122,6 @@ public class InviteGameMenu extends JFrame {
                 memberNames[0]);
 
         this.main.notifyInvitation(invitee);
-    }
-
-    public void addInvitee(String invitee) {
-        inviteeList.add(invitee);
     }
 
 }

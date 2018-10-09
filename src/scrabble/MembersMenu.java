@@ -20,6 +20,7 @@ public class MembersMenu extends JPanel {
 	private boolean invited = false;
 	private JButton initButton;
 	private JLabel messageLabel = new JLabel();
+	private ArrayList<String> inviteeList;
 	/**
 	 * Create the panel.
 	 * @param main
@@ -27,6 +28,7 @@ public class MembersMenu extends JPanel {
 	public MembersMenu(Main main) {
 		this.main = main;
 		this.memberLabels = new JLabel[8];
+		this.inviteeList = new ArrayList<>();
 
 		parentPanel = new JPanel();
 		parentPanel.setLayout(new BoxLayout(parentPanel, Y_AXIS));
@@ -49,6 +51,7 @@ public class MembersMenu extends JPanel {
 				public void actionPerformed(ActionEvent e) {
 					inviteGameMenu = new InviteGameMenu(main);
 					inviteGameMenu.setVisible(true);
+					initButton.setEnabled(false);
 				}
 			});
 
@@ -91,10 +94,12 @@ public class MembersMenu extends JPanel {
 		return invited;
 	}
 
+
 	public void addInvitee(String invitee) {
-		this.inviteGameMenu.addInvitee(invitee);
+		inviteeList.add(invitee);
 		this.inviteGameMenu.initInviteeLabels();
 	}
+
 
 	public InviteGameMenu getInviteGameMenu() {
 		return this.inviteGameMenu;
@@ -106,9 +111,18 @@ public class MembersMenu extends JPanel {
 
 	public void banInvitationFunction() {
 		initButton.setEnabled(false);
-		messageLabel.setText("You have accepted invitation.\nPlease wait for others.");
+		messageLabel.setText("Waiting...");
 		messageLabel.setFont(new Font("Arial", Font.BOLD, 20));
 		messageLabel.setForeground(Color.BLUE);
+		parentPanel.revalidate();
 
+	}
+
+	public ArrayList<String> getInviteeList() {
+		return inviteeList;
+	}
+
+	public void resetInvitBtn() {
+		this.initButton.setEnabled(true);
 	}
 }

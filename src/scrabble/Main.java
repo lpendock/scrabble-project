@@ -193,6 +193,8 @@ public class Main extends JFrame {
 				initMemberMenu();
 				break;
 
+			// all players can send this message to invite other
+			// if host is not invited, host have to broadcast this message
 			case "invite":
 				String inviter = commands[1];
 				String invitee = commands[2];
@@ -205,12 +207,15 @@ public class Main extends JFrame {
 				}
 				break;
 
-
+			// if host is the inviter, host have to broadcast this message
 			case "acceptInvitation":
 				inviter = commands[1];
 				invitee = commands[2];
 				if (inviter.equals(getPlayer())) {
 					this.membersMenu.addInvitee(invitee);
+					return;
+				} else if (isHost()) {
+					this.server.sendMessageToAll("acceptInvitation#" + inviter + "#" + invitee);
 				}
 				break;
 
@@ -307,9 +312,9 @@ public class Main extends JFrame {
 		}
 	}
 
-	// notify inviter acceptance when player click accept
+	// notify inviter acceptance after player click accept
 	public void notifyAcceptInvitation(String inviter) {
-		String command = "acceptInvitation#" + inviter + "#" +getPlayer();
+		String command = "acceptInvitation#" + inviter + "#" + getPlayer();
 		this.membersMenu.setInvited();
 		this.membersMenu.banInvitationFunction();
 		if (isHost()) {

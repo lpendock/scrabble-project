@@ -25,6 +25,7 @@ public class Game extends JFrame{
         parentPanel.add(this.alphabetPanel, BorderLayout.SOUTH);
         parentPanel.add(this.gameInfoBoard, BorderLayout.EAST);
 
+        super.setLocationRelativeTo(main);
         this.getContentPane().add(parentPanel);
         this.pack();
     }
