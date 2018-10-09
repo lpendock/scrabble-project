@@ -141,17 +141,17 @@ public class Main extends JFrame {
 	
 	//Update everyone due the way our architecture works i cant set to the one who requested it.
 	//I dont think it would cause any problems due to the logic of our program(will test more).
-	public void notifyClientsMemberList() {
-		if (this.isHost()) {
-			String command = "updateMemberList";
-			for (String name : members) {
-				if (name!=null) {
-					command = command + "#" + name;
-				}
-			}
-			this.server.sendMessageToAll(command);
-		}
-	}
+//	public void notifyClientsMemberList() {
+//		if (this.isHost()) {
+//			String command = "updateMemberList";
+//			for (String name : members) {
+//				if (name!=null) {
+//					command = command + "#" + name;
+//				}
+//			}
+//			this.server.sendMessageToAll(command);
+//		}
+//	}
 	
 
 
@@ -170,6 +170,7 @@ public class Main extends JFrame {
 
 			case "memberAdded":
 				addMember(commands[1]);
+				// only host can send this message
 				notifyClientsMemberChanges();
 				initMemberMenu();
 				break;
@@ -206,17 +207,17 @@ public class Main extends JFrame {
 
 			//Very similar to logic of memberUpdated and all that(didnt want to
 			//touch it due to it being used in other places)
-			case "getMemberList":
-				System.out.println("sending list");
-				 notifyClientsMemberList();
-				break;
-				
-			case "updateMemberList":
-				this.members = new ArrayList<>();
-				for (int i = 1; i < commands.length; i++) {
-					addMember(commands[i]);
-				}
-				break;
+//			case "getMemberList":
+//				System.out.println("sending list");
+//				 notifyClientsMemberList();
+//				break;
+//
+//			case "updateMemberList":
+//				this.members = new ArrayList<>();
+//				for (int i = 1; i < commands.length; i++) {
+//					addMember(commands[i]);
+//				}
+//				break;
 
 
 			// should only be received by clients

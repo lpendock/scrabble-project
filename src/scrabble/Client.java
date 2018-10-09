@@ -61,6 +61,7 @@ public class Client {
 		while (this.server == null) {
 			System.out.print(".");
 		}
+		System.out.println("\nClient sends message: " + message);
 		this.server.write(message);
 	}
 

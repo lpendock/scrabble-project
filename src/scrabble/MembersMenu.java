@@ -52,7 +52,6 @@ public class MembersMenu extends JPanel {
 			});
 
 		initButton.setAlignmentY(Component.CENTER_ALIGNMENT);
-
 		this.add(parentPanel);
 	}
 
@@ -97,6 +96,7 @@ public class MembersMenu extends JPanel {
 	public InviteGameMenu getInviteGameMenu() {
 		return this.inviteGameMenu;
 	}
+	
 	public void setInvited() {
 		this.invited = true;
 	}

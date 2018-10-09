@@ -64,35 +64,41 @@ public class Login extends JPanel {
 	            		int portnum =Integer.parseInt(textField_1.getText());
 	            		main.setPort(portnum);
 	            		
-					if (!main.isHost()) {
-						//only connect to the server the first time.other times is just to check name
-						if(main.getClientConnected() == 0) {
-							main.setIPaddress(textField.getText());
-							//main.setPlayer(nameField.getText());
-							main.startClientProcess();
-						}
-						
-						String command = "getMemberList" ;
-						main.client.sendToServer("getMemberList");
-						EventQueue.invokeLater(new Runnable() {
-							@Override
-							public void run() {
-								checkName();
-							}
-						});
-						
-						
-						
-					} else {
-						main.setPlayer(nameField.getText());
-						//start the server process then do member menu stuff
-						main.startServerProcess();
-						main.initMemberMenu();
-					}
-	            }
-	            }
-	        });
+                        if (!main.isHost()) {
+                            //only connect to the server the first time.other times is just to check name
+                            if(main.getClientConnected() == 0) {
+                                main.setIPaddress(textField.getText());
+                                //main.setPlayer(nameField.getText());
+                                main.startClientProcess();
 
+
+                            }
+
+//                            String command = "getMemberList" ;
+//                            main.client.sendToServer("getMemberList");
+                            EventQueue.invokeLater(new Runnable() {
+                                @Override
+                                public void run() {
+//                                    checkName();
+									if (main.getMemberList().contains(nameField)) {
+										System.out.println("Name has been used");
+									} else {
+										System.out.println("no body exists");
+										main.initMemberMenu();
+									}
+
+                                }
+                            });
+
+                        } else {
+                            main.setPlayer(nameField.getText());
+                            //start the server process then do member menu stuff
+                            main.startServerProcess();
+                            main.initMemberMenu();
+                        }
+	                }
+	            }
+		});
 	}
 	
 	//checks to make sure port is number
@@ -117,7 +123,5 @@ public class Login extends JPanel {
 			main.notifyServerJoiningGame();
 		}
 	}
-
-	
 
 }

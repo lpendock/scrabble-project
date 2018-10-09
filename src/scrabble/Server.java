@@ -75,6 +75,7 @@ public class Server {
 
 	
 	public void sendMessageToAll(String message) {
+		System.out.println("Server send message: " + message);
 		for (ConnectionToClient c: clients) {
 			c.write(message);
 		}
