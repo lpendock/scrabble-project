@@ -4,17 +4,23 @@ package scrabble;
 import javax.swing.*;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class handles information presented in game UI such as player names and scores
+ */
 public class GameInfoBoard extends JPanel{
 
-    private JLabel playerName;
-    private JLabel score;
+
+    private JPanel controlPanel = new JPanel();
     private JPanel playerListPanel = new JPanel();
     private JPanel scoreListPanel = new JPanel();
-
+    private JPanel statusPanel = new JPanel();
+    private JLabel statusLabel = new JLabel();
     private static final int DEFAULT_WIDTH = 200;
     private static final int DEFAULT_HEIGHT = 400;
 
@@ -33,9 +39,11 @@ public class GameInfoBoard extends JPanel{
         playerListPanel.setLayout( new GridLayout(8,1));
         scoreListPanel.setLayout( new GridLayout(8,1));
 
-        add(playerListPanel, BorderLayout.WEST);
-        add(scoreListPanel, BorderLayout.EAST);
+        this.add(playerListPanel, BorderLayout.WEST);
+        this.add(scoreListPanel, BorderLayout.EAST);
 
+        JLabel playerName;
+        JLabel score;
 
         playerName = new JLabel("Players");
         score = new JLabel("Score");
@@ -45,23 +53,31 @@ public class GameInfoBoard extends JPanel{
         playerListPanel.add(playerName);
         scoreListPanel.add(score);
 
-        setBorder(BorderFactory.createEmptyBorder(10, 10, 200, 30));
+        playerListPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 30, 0));
+        scoreListPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 30, 30));
 
+        statusLabel = new JLabel();
+        changeStatus(false);
+        statusPanel.add(statusLabel);
+        statusPanel.setBackground(Color.lightGray);
+        this.add(statusPanel, BorderLayout.NORTH);
+
+        initControlButton();
         this.playerScoreMap = new HashMap<>();
         this.game = game;
 
     }
 
     public void initPlayerInfo() {
-        this.members = game.getMembersList();
+        this.members = game.playerList;
         for (int i = 0; i < members.size(); i ++) {
 
             JLabel memberName = new JLabel(members.get(i));
-            memberName.setFont(new Font("Courier New", Font.BOLD, 15));
+            memberName.setFont(new Font("Arial", Font.BOLD, 15));
             playerListPanel.add(memberName);
 
             JLabel score = new JLabel("0");
-            score.setFont(new Font("Courier New", Font.BOLD, 15));
+            score.setFont(new Font("Arial", Font.BOLD, 15));
             scoreListPanel.add(score);
 
             playerScoreMap.put(members.get(i), score);
@@ -89,8 +105,122 @@ public class GameInfoBoard extends JPanel{
     	}
     	return winners;
     }
+
     public void updateScore(String playerName, int points) {
-        int currentScore = Integer.parseInt(this.playerScoreMap.get(playerName).getText());
-        this.playerScoreMap.get(playerName).setText("" + (currentScore + points));
+        if (!game.isGameRunning()) return;
+        int currentScore = Integer.parseInt(playerScoreMap.get(playerName).getText());
+        playerScoreMap.get(playerName).setText("" + (currentScore + points));
+    }
+
+
+    // init vote button and pass button
+    private void initControlButton() {
+
+        JButton voteBtn = new JButton("vote");
+        voteBtn.setFont(new Font("Arial", Font.BOLD, 16));
+        voteBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if (!game.isPlayerTurn()) {
+                    JOptionPane.showConfirmDialog(
+                            game.getGameInfoBoard(),
+                            "Please wait for your turn",
+                            "confirm",
+                            JOptionPane.DEFAULT_OPTION);
+                    return;
+                }
+
+                if (!game.getGameBoard().isLetterPlaced()) {
+                    JOptionPane.showConfirmDialog(
+                            game.getGameInfoBoard(),
+                            "Please place one tile",
+                            "confirm",
+                            JOptionPane.DEFAULT_OPTION);
+                    return;
+                }
+
+                game.getAlphabetPanel().resetChosenTile();
+
+                int row = game.getGameBoard().getSelectedRow();
+                int column = game.getGameBoard().getSelectedColumn();
+                game.getGameBoard().getWord(row,column);
+                // if there are multiple players, they have to play by turn
+                if (game.playerList.size() != 1) {
+
+                    game.setPlayerTurn(false);
+
+                    if (game.isHost()) {
+                        game.notifyNextPlayer(game.getPlayerNextTurn(game.getCurrentPlayer()));
+                    } else {
+                        game.notifyCompletedTurn(false);
+                    }
+
+                }
+                game.getGameBoard().setLetterPlaced(false);
+            }
+
+        });
+
+
+        JButton passBtn = new JButton("pass");
+        passBtn.setFont(new Font("Arial", Font.BOLD, 16));
+        passBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if (!game.isPlayerTurn()) {
+                    JOptionPane.showConfirmDialog(
+                            game.getGameInfoBoard(),
+                            "Please wait for your turn",
+                            "confirm",
+                            JOptionPane.DEFAULT_OPTION);
+                    return;
+                }
+
+                game.getAlphabetPanel().resetChosenTile();
+
+                if (game.playerList.size() != 1) {
+
+                    game.setPlayerTurn(false);
+
+                    if (game.isHost()) {
+                        game.addPass();
+                        game.notifyNextPlayer(game.getPlayerNextTurn(game.getCurrentPlayer()));
+                    } else {
+                        // if player didn't place any letter
+                        if (!game.getGameBoard().isLetterPlaced()) {
+                            game.notifyCompletedTurn(true);
+                        } else {
+                            game.notifyCompletedTurn(false);
+                        }
+                    }
+                }
+                // reset status
+                game.getGameBoard().setLetterPlaced(false);
+            }
+
+        });
+
+
+        controlPanel.add(voteBtn);
+        // just add some space here
+        controlPanel.add(Box.createRigidArea(new Dimension(5,0)));
+        controlPanel.add(passBtn);
+        this.add(controlPanel, BorderLayout.SOUTH);
+    }
+
+    // use boolean value to represent whether it is current player's turn
+    public void changeStatus(boolean turn) {
+        if (turn) {
+            statusLabel.setText("Your Turn");
+            statusLabel.setFont(new Font("Arial", Font.PLAIN, 26));
+            statusLabel.setForeground(Color.blue);
+        } else {
+            statusLabel.setText("Wait");
+            statusLabel.setFont(new Font("Arial", Font.PLAIN, 26));
+            statusLabel.setForeground(Color.RED);
+        }
+        statusPanel.revalidate();
     }
 }

@@ -4,6 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+
+/**
+ * This class handles game logic and UI.
+ */
 public class Game extends JFrame{
 
     private Board gameBoard;
@@ -12,6 +16,7 @@ public class Game extends JFrame{
     private GameInfoBoard gameInfoBoard;
     private boolean playerTurn;
     private Vote vote;
+    protected ArrayList<String> playerList;
 
     public Game(Main main) {
 
@@ -19,14 +24,19 @@ public class Game extends JFrame{
         this.gameBoard = new Board(this);
         this.gameInfoBoard = new GameInfoBoard(this);
         this.main = main;
+        playerList = new ArrayList<>();
+
         JPanel parentPanel = new JPanel();
         parentPanel.setLayout(new BorderLayout());
         parentPanel.add(this.gameBoard, BorderLayout.CENTER);
         parentPanel.add(this.alphabetPanel, BorderLayout.SOUTH);
         parentPanel.add(this.gameInfoBoard, BorderLayout.EAST);
 
+
         this.getContentPane().add(parentPanel);
         this.pack();
+        this.setLocationRelativeTo(null);
+
     }
 
 
@@ -43,7 +53,7 @@ public class Game extends JFrame{
         // should only be called by server
         if (!isHost()) return;
 
-        this.vote = new Vote(this.getMembersList().size(), voteInitiator, word);
+        this.vote = new Vote(this.playerList.size(), voteInitiator, word);
         this.main.server.sendMessageToAll("initVote#" + voteInitiator);
 
     }
@@ -174,17 +184,17 @@ public class Game extends JFrame{
      * --------------------------------------Player Turn---------------------------------------------
      */
 
-    public void notifyCompletedTurn() {
+    public void notifyCompletedTurn(boolean pass) {
         if (isHost()) return;
-        this.main.client.sendToServer("finishedTurn#" + this.main.getPlayer());
+        this.main.client.sendToServer("finishedTurn#" + this.main.getPlayer() + "#" + pass);
     }
 
     public String getPlayerNextTurn(String playerThisTurn) {
-        int index = this.getMembersList().indexOf(playerThisTurn);
-        if (index == this.getMembersList().size() - 1) {
-            return this.getMembersList().get(0);
+        int index = this.playerList.indexOf(playerThisTurn);
+        if (index == this.playerList.size() - 1) {
+            return this.playerList.get(0);
         } else {
-            return this.getMembersList().get(index + 1);
+            return this.playerList.get(index + 1);
         }
     }
 
@@ -196,6 +206,7 @@ public class Game extends JFrame{
 
     public void setPlayerTurn(boolean bool) {
         this.playerTurn = bool;
+        this.getGameInfoBoard().changeStatus(bool);
     }
 
     public boolean isPlayerTurn() {
@@ -233,6 +244,19 @@ public class Game extends JFrame{
 
     public ArrayList<String> getMembersList() {
         return main.getMemberList();
+    }
+
+    public boolean isGameRunning() {
+        return main.isGameRunning();
+    }
+
+    public void addPass() {
+        if (!isHost()) return;
+        main.passCount++;
+        if (main.passCount == this.playerList.size()) {
+            main.notifyClientsEndGame();
+            main.initCheckWinner();
+        }
     }
 
 }

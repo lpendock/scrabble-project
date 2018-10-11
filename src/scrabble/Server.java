@@ -6,10 +6,8 @@ import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /*
- * Quite a lot of this code was produced by 'Mordechai' from 
- * https://stackoverflow.com/questions/13115784/sending-a-message-to-all-clients-client-server-communication
+ * This is the server for host players
  */
-
 public class Server {
 	
 
@@ -75,6 +73,7 @@ public class Server {
 
 	
 	public void sendMessageToAll(String message) {
+		System.out.println("Server send message: " + message);
 		for (ConnectionToClient c: clients) {
 			c.write(message);
 		}
