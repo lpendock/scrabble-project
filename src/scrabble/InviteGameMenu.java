@@ -7,8 +7,10 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import static javax.swing.BoxLayout.Y_AXIS;
 
+/**
+ * This class generates UI for invitation and game initialization.
+ */
 public class InviteGameMenu extends JFrame {
 
     private JPanel parentPanel;
@@ -38,6 +40,7 @@ public class InviteGameMenu extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 // player who accepted other invitation should not invite other again
                 initInvitationDialog();
+                main.membersMenu.setInvited();
             }
         });
         parentPanel.add(inviteBtn);

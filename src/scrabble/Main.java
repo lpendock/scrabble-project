@@ -11,6 +11,9 @@ import java.util.Collections;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+/**
+ * This class handles the main logic of the whole system
+ */
 public class Main extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -43,7 +46,6 @@ public class Main extends JFrame {
 		//the first player in the list will start the game first
 		if (this.game.playerList.get(0).equals(getPlayer())) {
 			game.setPlayerTurn(true);
-			game.getGameBoard().setFirstHand(true);
 		}
 
 		// show game
@@ -434,19 +436,19 @@ public class Main extends JFrame {
 
 			//sets that this specific program is a host for login.
 			this.host = true;
-			
+			this.setTitle("Host Player");
 		} else {
 			//set not host let login start client stuff.
 			this.host = false;
-
+			this.setTitle("Client Player");
 		}
 
 		//start at connectionMenu first
-		connectionMenu con = new connectionMenu(this);
+		ConnectionMenu connectionMenu = new ConnectionMenu(this);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
-		setContentPane(con);
+		setContentPane(connectionMenu);
 	}
 
 

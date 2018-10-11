@@ -8,6 +8,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 
+
+/**
+ * Deal with login validation and communication
+ */
 public class Login extends JPanel {
 	private JTextField nameField;
 	private Main main;

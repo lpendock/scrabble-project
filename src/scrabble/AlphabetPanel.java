@@ -17,13 +17,14 @@ public class AlphabetPanel extends JPanel{
     private static final int DEFAULT_WIDTH = 600;
     private static final int DEFAULT_HEIGHT = 50;
 
-    private final JButton btnNewButton = new JButton("a");
-    private final JButton btnNewButton_1 = new JButton("b");
-    private final JButton btnNewButton_2 = new JButton("c");
-    private final JButton btnNewButton_3 = new JButton("d");
-    private final JButton btnNewButton_4 = new JButton("e");
-    private final JButton btnNewButton_5 = new JButton("f");
-    private final JButton btnNewButton_6 = new JButton("g");
+    // seven buttons with random alphabets
+    private final JButton alphabetButton = new JButton("a");
+    private final JButton alphabetButton_1 = new JButton("b");
+    private final JButton alphabetButton_2 = new JButton("c");
+    private final JButton alphabetButton_3 = new JButton("d");
+    private final JButton alphabetButton_4 = new JButton("e");
+    private final JButton alphabetButton_5 = new JButton("f");
+    private final JButton alphabetButton_6 = new JButton("g");
 
     private AlphabetBag alphabetBag;
     private Game game;
@@ -31,8 +32,8 @@ public class AlphabetPanel extends JPanel{
     String setLetter = "";
 
 
-    ArrayList<String> hand = new ArrayList<String>();
-    JPanel rackPanel = new JPanel();
+    private ArrayList<String> hand = new ArrayList<String>();
+    private JPanel rackPanel = new JPanel();
 
     /**
      * By overriding this function the system knows the
@@ -86,113 +87,115 @@ public class AlphabetPanel extends JPanel{
         tileChosen = null;
     }
 
-
+    // initialize the button panel
     private void initRackPanel() {
-//        rackPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-
-        rackPanel.add(btnNewButton);
-        btnNewButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!game.isPlayerTurn()) {
-                    JOptionPane.showMessageDialog(game.getGameBoard(), "Please wait for your turn");
-                    return;
-                }
-                setLetter = btnNewButton.getText();
-                tileChosen = btnNewButton;
-            }
-        });
-
-        rackPanel.add(btnNewButton_1);
-        btnNewButton_1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!game.isPlayerTurn()) {
-                    JOptionPane.showMessageDialog(game.getGameBoard(), "Please wait for your turn");
-                    return;
-                }
-                setLetter = btnNewButton_1.getText();
-                tileChosen = btnNewButton_1;
-
-            }
-        });
-
-        rackPanel.add(btnNewButton_2);
-        btnNewButton_2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!game.isPlayerTurn()) {
-                    JOptionPane.showMessageDialog(game.getGameBoard(), "Please wait for your turn");
-                    return;
-                }
-                setLetter = btnNewButton_2.getText();
-                tileChosen = btnNewButton_2;
-            }
-        });
-
-        rackPanel.add(btnNewButton_3);
-        btnNewButton_3.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!game.isPlayerTurn()) {
-                    JOptionPane.showMessageDialog(game.getGameBoard(), "Please wait for your turn");
-                    return;
-                }
-                setLetter = btnNewButton_3.getText();
-                tileChosen = btnNewButton_3;
-            }
-        });
-
-        rackPanel.add(btnNewButton_4);
-        btnNewButton_4.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!game.isPlayerTurn()) {
-                    JOptionPane.showMessageDialog(game.getGameBoard(), "Please wait for your turn");
-                    return;
-                }
-                setLetter = btnNewButton_4.getText();
-                tileChosen = btnNewButton_4;
-            }
-        });
-
-        rackPanel.add(btnNewButton_5);
-        btnNewButton_5.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!game.isPlayerTurn()) {
-                    System.out.println(game.isPlayerTurn());
-                    JOptionPane.showMessageDialog(game.getGameBoard(), "Please wait for your turn");
-                    return;
-                }
-                setLetter = btnNewButton_5.getText();
-                tileChosen = btnNewButton_5;
-            }
-        });
-
-        rackPanel.add(btnNewButton_6);
-        btnNewButton_6.addActionListener(new ActionListener() {
+        rackPanel.add(alphabetButton);
+        alphabetButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!game.isPlayerTurn()) {
                     JOptionPane.showMessageDialog(game.getGameBoard(), "Please wait for your turn!");
                     return;
                 }
-                setLetter = btnNewButton_6.getText();
-                tileChosen = btnNewButton_6;
+                setLetter = alphabetButton.getText();
+                tileChosen = alphabetButton;
+            }
+        });
+
+        rackPanel.add(alphabetButton_1);
+        alphabetButton_1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!game.isPlayerTurn()) {
+                    JOptionPane.showMessageDialog(game.getGameBoard(), "Please wait for your turn!");
+                    return;
+                }
+                setLetter = alphabetButton_1.getText();
+                tileChosen = alphabetButton_1;
+
+            }
+        });
+
+        rackPanel.add(alphabetButton_2);
+        alphabetButton_2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!game.isPlayerTurn()) {
+                    JOptionPane.showMessageDialog(game.getGameBoard(), "Please wait for your turn!");
+                    return;
+                }
+                setLetter = alphabetButton_2.getText();
+                tileChosen = alphabetButton_2;
+            }
+        });
+
+        rackPanel.add(alphabetButton_3);
+        alphabetButton_3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!game.isPlayerTurn()) {
+                    JOptionPane.showMessageDialog(game.getGameBoard(), "Please wait for your turn!");
+                    return;
+                }
+                setLetter = alphabetButton_3.getText();
+                tileChosen = alphabetButton_3;
+            }
+        });
+
+        rackPanel.add(alphabetButton_4);
+        alphabetButton_4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!game.isPlayerTurn()) {
+                    JOptionPane.showMessageDialog(game.getGameBoard(), "Please wait for your turn!");
+                    return;
+                }
+                setLetter = alphabetButton_4.getText();
+                tileChosen = alphabetButton_4;
+            }
+        });
+
+        rackPanel.add(alphabetButton_5);
+        alphabetButton_5.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!game.isPlayerTurn()) {
+                    System.out.println(game.isPlayerTurn());
+                    JOptionPane.showMessageDialog(game.getGameBoard(), "Please wait for your turn!");
+                    return;
+                }
+                setLetter = alphabetButton_5.getText();
+                tileChosen = alphabetButton_5;
+            }
+        });
+
+        rackPanel.add(alphabetButton_6);
+        alphabetButton_6.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!game.isPlayerTurn()) {
+                    JOptionPane.showMessageDialog(game.getGameBoard(), "Please wait for your turn!");
+                    return;
+                }
+                setLetter = alphabetButton_6.getText();
+                tileChosen = alphabetButton_6;
             }
         });
     }
 
     //start first hand(display correct letters)
     private void initHand() {
-        btnNewButton.setText(hand.get(0));
-        btnNewButton_1.setText(hand.get(1));
-        btnNewButton_2.setText(hand.get(2));
-        btnNewButton_3.setText(hand.get(3));
-        btnNewButton_4.setText(hand.get(4));
-        btnNewButton_5.setText(hand.get(5));
-        btnNewButton_6.setText(hand.get(6));
+        alphabetButton.setText(hand.get(0));
+        alphabetButton_1.setText(hand.get(1));
+        alphabetButton_2.setText(hand.get(2));
+        alphabetButton_3.setText(hand.get(3));
+        alphabetButton_4.setText(hand.get(4));
+        alphabetButton_5.setText(hand.get(5));
+        alphabetButton_6.setText(hand.get(6));
     }
 
+    // to forget the tile being chosen in the panel
+    public void resetChosenTile() {
+        this.tileChosen = null;
+    }
 }

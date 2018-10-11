@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class handles information presented in game UI such as player names and scores
+ */
 public class GameInfoBoard extends JPanel{
 
 
@@ -137,6 +140,8 @@ public class GameInfoBoard extends JPanel{
                     return;
                 }
 
+                game.getAlphabetPanel().resetChosenTile();
+
                 int row = game.getGameBoard().getSelectedRow();
                 int column = game.getGameBoard().getSelectedColumn();
                 game.getGameBoard().getWord(row,column);
@@ -172,6 +177,8 @@ public class GameInfoBoard extends JPanel{
                             JOptionPane.DEFAULT_OPTION);
                     return;
                 }
+
+                game.getAlphabetPanel().resetChosenTile();
 
                 if (game.playerList.size() != 1) {
 

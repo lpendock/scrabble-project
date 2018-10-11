@@ -9,6 +9,10 @@ import java.util.ArrayList;
 
 import static javax.swing.BoxLayout.Y_AXIS;
 
+
+/**
+ * This class handles potential player pool and invitation logic.
+ */
 public class MembersMenu extends JPanel {
 
 	//Might want to use an actual arraylist to save members?(do we need that anywhere else?)
@@ -82,6 +86,9 @@ public class MembersMenu extends JPanel {
 
 
 	public void initInvitationDialog(String inviter) {
+		// being successfully invited user should not be invited again
+		if (this.isInvited()) return;
+
 		int n = JOptionPane.showConfirmDialog(
 				this,
 				"Player: " + inviter + " invite you to join the game.",

@@ -4,6 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+
+/**
+ * This class handles game logic and UI.
+ */
 public class Game extends JFrame{
 
     private Board gameBoard;

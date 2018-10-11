@@ -9,8 +9,9 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-
-
+/**
+ * This is the right board;
+ */
 public class Board extends JPanel {
 	 
 
@@ -22,10 +23,11 @@ public class Board extends JPanel {
 	private JPanel[][] squares = new JPanel[20][20];
 	private String setLetter = "";
 	private String selectedWord = "";
-	private boolean letterPlaced;
+	private boolean letterPlaced = false;
 	private int selectedRow;
 	private int selectedColumn;
-	private boolean firstHand = false;
+	private boolean firstHand = true;
+
 
 	private static final int DEFAULT_WIDTH = 800;
 	private static final int DEFAULT_HEIGHT = 800;
@@ -89,6 +91,8 @@ public class Board extends JPanel {
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
 
+	            	if (!game.isPlayerTurn()) return;
+
 					if (letterPlaced) {
 						JOptionPane.showConfirmDialog(
 								game.getGameInfoBoard(),
@@ -98,8 +102,21 @@ public class Board extends JPanel {
 						return;
 					}
 
-	            	// return false if no neighbour
-					if (!firstHand && !hasNeighbour(rowNum,columnNum)) {
+					/**
+					 * 'firstHand' is true by default, so if it's true we have to check all tiles to see
+					 * if it's still true. Once any tile was occupied, 'firsthand' will be set to false.
+					 * By doing so we can avoid looping through all tiles every time.
+					 */
+					if (firstHand) {
+						// loop through all tiles
+						if(!isFirstHand()) {
+							firstHand = false;
+						}
+					}
+
+	            	// warn user if tile is placed on wrong place
+					if (!firstHand && !hasNeighbour(rowNum,columnNum) &&
+							alphabetPanel.getTheChosenTile() != null) {
 
 						JOptionPane.showConfirmDialog(
                         game.getGameInfoBoard(),
@@ -108,16 +125,16 @@ public class Board extends JPanel {
                         JOptionPane.DEFAULT_OPTION);
 						return;
 					}
-					firstHand = false;
-
-
-	            	letterPlaced = true;
 
 					if (alphabetPanel.getTheChosenTile() != null) {
 						setLetter = alphabetPanel.getTheChosenTile().getText();
+					} else {
+						return;
 					}
 
-	            	if(button.getText().equals("") && !setLetter.equals("")) {
+					letterPlaced = true;
+
+					if(button.getText().equals("") && !setLetter.equals("")) {
 
 						button.setText(setLetter);
 						button.setBackground(Color.cyan);
@@ -309,6 +326,22 @@ public class Board extends JPanel {
 				grid[i][endColumn].setForeground(Color.WHITE);
 			}
 		}
+	}
+
+
+	// check whether it's first hand or not.
+	public boolean isFirstHand() {
+		for (int i = 0; i < 20; i++) {
+			for (int j = 0; j < 20; j++) {
+				// find a non-empty tile
+				if (!grid[i][j].getText().equals("")) {
+					System.out.println("\nThis is not first hand\n");
+					System.out.println(i + " " + j);
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	public int getSelectedRow() {
