@@ -84,7 +84,10 @@ public class GameInfoBoard extends JPanel{
         }
     }
 
-    //check who has highest score(can return multiple people who share highest score)
+    /**
+     * check who has highest score(can return multiple people who share highest score)
+     * @return
+     */
     public ArrayList<String> checkWinner() {
     	ArrayList<String> winners = new ArrayList<String>();
     	int highscore = 0;
@@ -113,7 +116,9 @@ public class GameInfoBoard extends JPanel{
     }
 
 
-    // init vote button and pass button
+    /**
+     *  Initiate vote button and pass button.
+     */
     private void initControlButton() {
 
         JButton voteBtn = new JButton("vote");
@@ -210,7 +215,10 @@ public class GameInfoBoard extends JPanel{
         this.add(controlPanel, BorderLayout.SOUTH);
     }
 
-    // use boolean value to represent whether it is current player's turn
+    /**
+     *  use boolean value to represent whether it is current player's turn
+     * @param turn
+     */
     public void changeStatus(boolean turn) {
         if (turn) {
             statusLabel.setText("Your Turn");

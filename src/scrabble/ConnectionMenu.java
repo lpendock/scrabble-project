@@ -13,7 +13,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 /**
- * This panel handles connection configuration and login validation.
+ * This panel handles connection configuration.
  */
 public class ConnectionMenu extends JPanel {
 	private Main main;
@@ -21,7 +21,8 @@ public class ConnectionMenu extends JPanel {
 	private JTextField portNumField;
 
 	/**
-	 * Create the panel.
+	 * Creates and handles the GUI and logic of the ConnectionMenu.
+	 *  
 	 */
 	public ConnectionMenu(Main main) {
 		setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
@@ -44,9 +45,11 @@ public class ConnectionMenu extends JPanel {
 		JButton nameSubmitButton = new JButton("submit");
 		nameSubmitButton.setHorizontalAlignment(SwingConstants.LEADING);
 		add(nameSubmitButton);
+		//On press, submits port and IP address to main class
 		nameSubmitButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				//checks if port is a number before doing anything else
 				if(checkPort(portNumField.getText()) == true) {
 
 					int portNum =Integer.parseInt(portNumField.getText());
@@ -54,8 +57,7 @@ public class ConnectionMenu extends JPanel {
 					main.setIPaddress(IPaddressField.getText());
 
 					if (!main.isHost()) {
-						//only connect to the server the first time.other times is just to check name
-
+						//attempt to connect to server if not a host
 						// if no server running then do nothing
 						if (!main.initClient()) return;
 						main.startClientProcess();
@@ -67,7 +69,7 @@ public class ConnectionMenu extends JPanel {
 						});
 					}
 					else {
-						//start the server process then go login for name input
+						//start the server process and transition to next panel
 						main.startServerProcess();
 						main.initLogin();
 					}
@@ -77,8 +79,14 @@ public class ConnectionMenu extends JPanel {
 
 	}
 	
-	//checks to make sure port is number
+	
+	/**
+	 * Checks if port entered is a number,displays popup message if not
+	 * @param port Port number entered
+	 * @return
+	 */
 	private boolean checkPort(String port) {
+		
 		try {
 			int portNum = Integer.parseInt(port);
 		} catch (NumberFormatException e) {

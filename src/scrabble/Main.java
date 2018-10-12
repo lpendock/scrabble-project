@@ -30,9 +30,8 @@ public class Main extends JFrame {
 
 
 	private int port = 8080;
-	//just to check if client is connected to a server;
-	private int clientConnected = 0;
-	//for name checking(or anyother form of checking)
+	
+	//for name checking
 	private boolean check;
 	private Game game;
 	//Default port and IP, will be changed when user enters it in login.
@@ -107,12 +106,7 @@ public class Main extends JFrame {
 			// if host is the inviter, host have to broadcast this message
 			case "acceptInvitation":
 				if (commands[1].equals(getPlayer())) {
-//					EventQueue.invokeLater(new Runnable() {
-//						@Override
-//						public void run() {
-//							initMemberMenu();
-//						}
-//					});
+
 					this.membersMenu.addInvitee(commands[2]);
 					return;
 				} else if (isHost()) {
@@ -120,9 +114,6 @@ public class Main extends JFrame {
 				}
 				break;
 
-
-			//Very similar to logic of memberUpdated and all that(didnt want to
-			//touch it due to it being used in other places)
 			case "getMemberList":
 				System.out.println("sending list");
 				 notifyClientsMemberList();
@@ -254,7 +245,9 @@ public class Main extends JFrame {
 	 */
 
 
-	// notify host or clients the game start with certain members
+	/**
+	 * notify host or clients the game start with certain members
+	 */
 	public void notifyGameStart() {
 		String command = "startGame";
 		for (String member : membersMenu.getInviteeList() ){
@@ -272,28 +265,36 @@ public class Main extends JFrame {
 	}
 
 
-	// should only be called by server
-	// every player has to end the game
+	/**
+	 *  should only be called by server
+	 *  every player has to end the game
+	 */
 	public void notifyClientsEndGame() {
 		String command = "endGame#";
 		this.server.sendMessageToAll(command);
 
 	}
 
-	// tell server that client has closed;
-	// then all player end game
+	/**
+	 *  tell server that client has closed;
+	 *  then all player end game
+	 */
 	public void notifyExitGame() {
 		String command = "exit#" + getPlayer();
 		this.client.sendToServer(command);
 	}
 
-	// client notify server before close
+	/**
+	 *  client notify server before close
+	 */
 	public void notifyLogout() {
 		String command = "logout#" + getPlayer();
 		this.client.sendToServer(command);
 	}
 
-
+	/**
+	 * Notify other clients if someone joined the game lobby
+	 */
 	public void notifyClientsMemberChanges() {
 
 		if (this.isHost()) {
@@ -309,9 +310,9 @@ public class Main extends JFrame {
 	}
 
 
-	//Update everyone due the way our architecture works i cant set to the one who requested it.
-	//I dont think it would cause any problems due to the logic of our program(will test more).
-
+	/**
+	 * Notify clients of all users in the game lobby.
+	 */
 	public void notifyClientsMemberList() {
 		if (this.isHost()) {
 
@@ -326,7 +327,10 @@ public class Main extends JFrame {
 		}
 	}
 
-	// any user send out invitation to other members
+	/**
+	 *  any user send out invitation to other members
+	 * @param invitee The player being invited to a game from the lobby.
+	 */
 	public void notifyInvitation(String invitee) {
 		String command = "invite#" + getPlayer() + "#" + invitee;
 		if (isHost()) {
@@ -336,7 +340,10 @@ public class Main extends JFrame {
 		}
 	}
 
-	// notify inviter acceptance after player click accept
+	/**
+	 *  notify inviter acceptance after player click accept
+	 * @param inviter The player inviting others to play a game
+	 */
 	public void notifyAcceptInvitation(String inviter) {
 		String command = "acceptInvitation#" + inviter + "#" + getPlayer();
 		this.membersMenu.setInvited();
@@ -348,7 +355,9 @@ public class Main extends JFrame {
 		}
 	}
 
-
+	/**
+	 * Joining a game.
+	 */
 	public void notifyServerJoiningGame() {
 		String command = "memberAdded#" + this.currentPlayer;
 		System.out.println("sending name to server!");
@@ -367,7 +376,9 @@ public class Main extends JFrame {
 	 */
 
 
-	//Simple winner calculator
+	/**
+	 * Simple winner calculator
+	 */
 	public void initCheckWinner() {
 		if (!isGameRunning()) return;
 		ArrayList<String> winners = this.game.getGameInfoBoard().checkWinner();
@@ -438,7 +449,7 @@ public class Main extends JFrame {
 			this.host = true;
 			this.setTitle("Host Player");
 		} else {
-			//set not host let login start client stuff.
+			//set not host
 			this.host = false;
 			this.setTitle("Client Player");
 		}
@@ -477,8 +488,7 @@ public class Main extends JFrame {
 			}
 		};
 		runClient.start();
-		//might not need this anymore
-		clientConnected = 1;
+		
 		
 	}
 	private void initServer() {
@@ -487,7 +497,7 @@ public class Main extends JFrame {
 			server = new Server(port, 4, this);
 			System.out.println("init server!!");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 	}
@@ -519,9 +529,6 @@ public class Main extends JFrame {
 		this.check = check;
 	}
 
-	public int getClientConnected() {
-		return clientConnected;
-	}
 
 	public ArrayList<String> getMemberList() {
 		return members;

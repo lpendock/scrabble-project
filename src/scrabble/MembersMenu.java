@@ -15,8 +15,7 @@ import static javax.swing.BoxLayout.Y_AXIS;
  */
 public class MembersMenu extends JPanel {
 
-	//Might want to use an actual arraylist to save members?(do we need that anywhere else?)
-	//ArrayList<String> members = new ArrayList<String>();
+
 	private JPanel parentPanel;
 	private Main main;
 	private InviteGameMenu inviteGameMenu;

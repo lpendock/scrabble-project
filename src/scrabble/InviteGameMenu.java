@@ -20,6 +20,7 @@ public class InviteGameMenu extends JFrame {
     private ArrayList<String> displayedLabels = new ArrayList<>();
 
 
+  
     public InviteGameMenu(Main main) {
         this.main = main;
         this.memberMenu = main.membersMenu;
@@ -49,11 +50,11 @@ public class InviteGameMenu extends JFrame {
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // todo: notify invitees to start game;
+               
                 inviteeList.add(main.getPlayer());
                 main.notifyGameStart();
 
-//                main.startGame();
+
                 main.membersMenu.getInviteGameMenu().setVisible(false);
             }
         });
@@ -86,6 +87,7 @@ public class InviteGameMenu extends JFrame {
 
     public void initInviteeLabels() {
         for (String invitee : inviteeList) {
+        	
             // if this name has been displayed then ignore it
             if (displayedLabels.contains(invitee)) continue;
             JLabel inviteeLabel = new JLabel(invitee);

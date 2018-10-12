@@ -17,7 +17,7 @@ public class Login extends JPanel {
 	private Main main;
 
 	/**
-	 * Create the panel.
+	 * Creates and handles the GUI and logic of the Login panel.
 	 * @param main
 	 */
 	public Login(Main main) {
@@ -37,15 +37,16 @@ public class Login extends JPanel {
 		nameSubmitButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//checks if host or not then do relevant stuff
-
+			
+				// displays a popup error if user attempts to submit an empty name field
 				if (nameField.getText().equals("") || nameField.getText().isEmpty()) {
 					JOptionPane.showMessageDialog(main, "Name should not be empty");
 					return;
 				}
 
+				
 				if (!main.isHost()) {
-
+					//tries to get an up-to-date list of all users from the server to check name entered.
 					main.client.sendToServer("getMemberList");
 					EventQueue.invokeLater(new Runnable() {
 						@Override
@@ -55,8 +56,9 @@ public class Login extends JPanel {
 					});
 
 				} else {
+					
 					main.setPlayer(nameField.getText());
-					// do member menu stuff
+					
 					main.initMemberMenu();
 				}
 			}
@@ -65,12 +67,16 @@ public class Login extends JPanel {
 	}
 
 
+	/**
+	 * checks if the name entered is already taken by another player
+	 */
 	private void checkName() {
+		//if take display popup to try another name
 		if( main.checkNameTaken(nameField.getText())) {
 			JOptionPane.showMessageDialog(main, "Name taken,choose another");
 		}
 		else {
-			//reset current player to new name
+			//sets name as current player and tries to enter game lobby
 			main.setPlayer(nameField.getText());
 			main.notifyServerJoiningGame();
 		}
