@@ -5,8 +5,8 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 
-/*
- * This is the server for host players
+/**
+ * Handles server logic for host players
  */
 public class Server {
 	
@@ -44,11 +44,11 @@ public class Server {
 
 		Thread messageHandling = new Thread() {
 			public void run(){
-				//System.out.println("Checking messages...");
+			
 				while(true){
 					try{
 						String message = messages.take();
-						// Do some handling here...
+						
 						main.parseCommand(message);
 					}
 					catch(InterruptedException e){
@@ -60,9 +60,15 @@ public class Server {
 
 		messageHandling.setDaemon(true);
 		messageHandling.start();
-//		while(true);
+
 	}
 
+	/**
+	 * @param port Number that clients connect to
+	 * @param numberOfPlayers Number of players in a game.
+	 * @param main The main class of the scrabble program
+	 * @throws IOException
+	 */
 	public Server(int port, int numberOfPlayers, Main main) throws IOException {
 		this.main = main;
 		this.serverSocket = new ServerSocket(port);
@@ -72,6 +78,10 @@ public class Server {
 	}
 
 	
+	/**
+	 *  Initiates sending a message to all clients connected
+	 * @param message The string to be sent.
+	 */
 	public void sendMessageToAll(String message) {
 		System.out.println("Server send message: " + message);
 		for (ConnectionToClient c: clients) {
@@ -80,6 +90,9 @@ public class Server {
 	}
 
 
+	/**
+	 * changes turn based on number of players.
+	 */
 	public void nextTurn() {
 		turn = (turn+1)%numberOfPlayers;
 	}

@@ -183,7 +183,7 @@ public class AlphabetPanel extends JPanel{
         });
     }
 
-    //start first hand(display correct letters)
+    //start first hand by displaying correct letters
     private void initHand() {
         alphabetButton.setText(hand.get(0));
         alphabetButton_1.setText(hand.get(1));
