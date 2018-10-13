@@ -114,7 +114,7 @@ public class Board extends JPanel {
 						}
 					}
 
-	            	// warn user if tile is placed on wrong 
+	            	// warn user if tile is placed on wrong
 					if (!firstHand && !hasNeighbour(rowNum,columnNum) &&
 							alphabetPanel.getTheChosenTile() != null) {
 
@@ -138,8 +138,7 @@ public class Board extends JPanel {
 
 						button.setText(setLetter);
 						button.setBackground(Color.cyan);
-						button.setBorderPainted(false);
-						button.setOpaque(true);
+
 						selectedColumn = columnNum;
 						selectedRow = rowNum;
 	            		alphabetPanel.setNewTile();

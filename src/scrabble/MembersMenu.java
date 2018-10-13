@@ -67,7 +67,7 @@ public class MembersMenu extends JPanel {
 	}
 
 
-
+    // init name list of logged in users
 	public void initMemberLabelList() {
 		ArrayList<String> list = this.main.getMemberList();
 		for (String name : list) {
@@ -83,7 +83,7 @@ public class MembersMenu extends JPanel {
 	}
 
 
-
+    // init the dialog for users to choose accept invitation or not.
 	public void initInvitationDialog(String inviter) {
 		// being successfully invited user should not be invited again
 		if (this.isInvited()) return;
@@ -104,7 +104,7 @@ public class MembersMenu extends JPanel {
 		return invited;
 	}
 
-
+    // add Invitee to list
 	public void addInvitee(String invitee) {
 		inviteeList.add(invitee);
 		this.inviteGameMenu.initInviteeLabels();
@@ -119,6 +119,8 @@ public class MembersMenu extends JPanel {
 		this.invited = true;
 	}
 
+
+	// this function will forbid current user to invite others.
 	public void banInvitationFunction() {
 		initButton.setEnabled(false);
 		messageLabel.setText("Waiting...");
@@ -132,6 +134,7 @@ public class MembersMenu extends JPanel {
 		return inviteeList;
 	}
 
+	// enable the init game button
 	public void resetInvitBtn() {
 		this.initButton.setEnabled(true);
 	}

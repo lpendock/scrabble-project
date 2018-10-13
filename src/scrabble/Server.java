@@ -22,22 +22,23 @@ public class Server {
 
 		Thread accept = new Thread() {
 			public void run(){
-			while(true){
 				System.out.println("Listening...");
-				try{
-					int size = clients.size();
-					if (size < numberOfPlayers) {
-						Socket s = serverSocket.accept();
-						s.setKeepAlive(true);
-						System.out.println("Connected to client " + size);
-						clients.add(new ConnectionToClient(s, size));
+			while(true){
 
+					try{
+						int size = clients.size();
+						if (size < numberOfPlayers) {
+							Socket s = serverSocket.accept();
+							s.setKeepAlive(true);
+							System.out.println("Connected to client " + size);
+							clients.add(new ConnectionToClient(s, size));
+
+						}
+					}
+					catch(IOException e){
+						e.printStackTrace();
 					}
 				}
-				catch(IOException e){
-					e.printStackTrace();
-				}
-			}
 			}
 		};
 		accept.start();
@@ -116,16 +117,20 @@ public class Server {
 			
 			Thread read = new Thread(){
                 public void run(){
-				while(active) {
-				   try {
-						String message = dis.readUTF();
-						messages.put(message);
-				   }
-				   catch (Exception e) {
-						e.printStackTrace();
-						active=false;
-				   }
-				}
+					while(active) {
+					   try {
+							String message = dis.readUTF();
+							messages.put(message);
+					   }
+					   catch (Exception e) {
+							e.printStackTrace();
+							active=false;
+							if (main.isGameRunning()) {
+								main.notifyClientsEndGame();
+								main.initCheckWinner();
+							}
+					   }
+					}
                 }
             };
 

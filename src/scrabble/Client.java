@@ -104,6 +104,8 @@ public class Client {
 						} catch (Exception e) {
 							active=false;
 							System.out.println("I'm inactive now.");
+							main.initCheckWinner();
+							main.initDisconnected();
 						}
 					}
 				}
