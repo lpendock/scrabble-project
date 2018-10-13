@@ -91,6 +91,8 @@ public class Client {
 							//e.printStackTrace();
 							active=false;
 							System.out.println("I'm inactive now.");
+							main.initCheckWinner();
+							main.initDisconnected();
 						}
 					}
 				}

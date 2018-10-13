@@ -366,6 +366,13 @@ public class Main extends JFrame {
 	 * --------------------------------------Init Components-------------------------------------------------
 	 */
 
+	//A dialog telling user connection to host is lost
+	public void initDisconnected() {
+		if (isGameRunning()) return;
+		JOptionPane.showMessageDialog(this, "Lose connection to Host");
+
+		System.exit(0);
+	}
 
 	//Simple winner calculator
 	public void initCheckWinner() {
@@ -595,10 +602,10 @@ public class Main extends JFrame {
 
 	public static void main(String[] args) {
 
+		Main frame = new Main();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Main frame = new Main();
 					frame.setVisible(true);
 					frame.addWindowListener(new java.awt.event.WindowAdapter() {
 						@Override
@@ -641,6 +648,19 @@ public class Main extends JFrame {
 				}
 			}
 		});
+
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run() {
+				if (!frame.isHost()) {
+					// if player is in the member menu.
+					if (!frame.isGameRunning()) {
+						frame.notifyLogout();
+					}
+				}
+				System.out.println("Running Shutdown Hook");
+			}
+		});
+
 	}
 
 }
