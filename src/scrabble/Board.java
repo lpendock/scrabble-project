@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
- * This is the right board;
+ * Handles GUI and logic related to the game board;
  */
 public class Board extends JPanel {
 	 
@@ -42,7 +42,7 @@ public class Board extends JPanel {
 	}
 	
 	/**
-	 * Create the panel.
+	 * Create the Board panel.
 	 */
 	public Board(Game game) {
 		this.game = game;
@@ -77,7 +77,7 @@ public class Board extends JPanel {
 
 		for (int row = 0; row < 20; row++) {
 			for (int column = 0; column < 20; column++) {
-				//Square square = Board.getSquare(row, column);
+			
 				JPanel panel = new JPanel();
 				JButton button = new JButton();
 
@@ -96,7 +96,7 @@ public class Board extends JPanel {
 					if (letterPlaced) {
 						JOptionPane.showConfirmDialog(
 								game.getGameInfoBoard(),
-								"Please place one tile at each turn",
+								"Please only place one tile each turn",
 								"confirm",
 								JOptionPane.DEFAULT_OPTION);
 						return;
@@ -120,7 +120,7 @@ public class Board extends JPanel {
 
 						JOptionPane.showConfirmDialog(
                         game.getGameInfoBoard(),
-                        "Please place the tile near each other",
+                        "Please place the tile next adjacent to a placed tile",
                         "confirm",
                         JOptionPane.DEFAULT_OPTION);
 						return;
@@ -166,7 +166,12 @@ public class Board extends JPanel {
 	
 
 
-	//Can be used to update Board when we implement that
+	/**
+	 * Updates Board state
+	 * @param rowNum Which row tile to update.
+	 * @param columnNum Which column tile to update
+	 * @param letter The letter to update with
+	 */
 	public void updateBoard(int rowNum,int columnNum, String letter) {
 		grid[rowNum][columnNum].setText(letter);
 		grid[rowNum][columnNum].setBackground(Color.cyan);
@@ -273,7 +278,7 @@ public class Board extends JPanel {
 	}
 
 
-	// check whether this tile has neighbour
+	// check whether this tile has a neighbour.
 	public boolean hasNeighbour(int row, int column) {
 		if (row - 1 >= 0 && !grid[row-1][column].getText().equals("")) return true;
 		if (row + 1 < 20 && !grid[row+1][column].getText().equals("")) return true;

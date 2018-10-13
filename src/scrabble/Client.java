@@ -3,6 +3,9 @@ package scrabble;
 import java.io.*;
 import java.net.*;
 import java.util.concurrent.LinkedBlockingQueue;
+/**
+ * Handles connection and network logic if client.
+ */
 
 public class Client {
 
@@ -12,6 +15,13 @@ public class Client {
 	private Main main;
 	private boolean active = true;
 	
+	/**
+	 * Creates a client class 
+	 * @param port Number needed to connect to correct Server port
+	 * @param address The ip address of the server
+	 * @param main 	The main class of the scrabble program
+	 * @throws IOException
+	 */
 	public Client(int port, String address, Main main) throws IOException {
 		this.main = main;
 		this.socket = new Socket(address,port);
@@ -21,7 +31,11 @@ public class Client {
 	}
 
 
+	/**
+	 * starts the process of connecting to the server and message handling 
+	 */
 	public void runClient () {
+		//attempts to connect to the server
 		Thread connectToServer = new Thread() {
 			@Override
 			public void run() {
@@ -36,10 +50,11 @@ public class Client {
 			}
 		};
 		connectToServer.start();
-
+		
+		//attempts to start message handling
 		Thread messageHandling = new Thread() {
 			public void run(){
-				//System.out.println("Checking messages...");
+				
 				while(true){
 					try{
 						if (!messages.isEmpty()) {
@@ -87,8 +102,6 @@ public class Client {
 							String message = dis.readUTF();
 							messages.put(message);
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							//e.printStackTrace();
 							active=false;
 							System.out.println("I'm inactive now.");
 							main.initCheckWinner();

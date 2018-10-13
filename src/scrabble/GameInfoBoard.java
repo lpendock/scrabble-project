@@ -32,7 +32,11 @@ public class GameInfoBoard extends JPanel{
         return new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     }
 
-
+    /**
+     * This board is the UI of player scores and names. It will
+     * be refreshed every time data updated.
+     * @param game
+     */
     public GameInfoBoard (Game game) {
         setLayout(new BorderLayout());
 
@@ -68,6 +72,10 @@ public class GameInfoBoard extends JPanel{
 
     }
 
+
+    /**
+     * This function initialise the Player information at the beginning
+     */
     public void initPlayerInfo() {
         this.members = game.playerList;
         for (int i = 0; i < members.size(); i ++) {
@@ -84,7 +92,10 @@ public class GameInfoBoard extends JPanel{
         }
     }
 
-    //check who has highest score(can return multiple people who share highest score)
+    /**
+     * check who has highest score(can return multiple people who share highest score)
+     * @return
+     */
     public ArrayList<String> checkWinner() {
     	ArrayList<String> winners = new ArrayList<String>();
     	int highscore = 0;
@@ -106,6 +117,12 @@ public class GameInfoBoard extends JPanel{
     	return winners;
     }
 
+
+    /**
+     * This function will updates scores of player based on name and scores added.
+     * @param playerName
+     * @param points
+     */
     public void updateScore(String playerName, int points) {
         if (!game.isGameRunning()) return;
         int currentScore = Integer.parseInt(playerScoreMap.get(playerName).getText());
@@ -113,9 +130,16 @@ public class GameInfoBoard extends JPanel{
     }
 
 
-    // init vote button and pass button
+    /**
+     *  Initiate vote button and pass button.
+     */
     private void initControlButton() {
 
+
+        /**
+         * This chunk of code set the vote button on control panel;
+         * it checks and validate whether player's move is valid.
+         */
         JButton voteBtn = new JButton("vote");
         voteBtn.setFont(new Font("Arial", Font.BOLD, 16));
         voteBtn.addActionListener(new ActionListener() {
@@ -162,7 +186,10 @@ public class GameInfoBoard extends JPanel{
 
         });
 
-
+        /**
+         * This chunk of code set the pass button on control panel;
+         * by pressing this button the turn will pass.
+         */
         JButton passBtn = new JButton("pass");
         passBtn.setFont(new Font("Arial", Font.BOLD, 16));
         passBtn.addActionListener(new ActionListener() {
@@ -210,7 +237,10 @@ public class GameInfoBoard extends JPanel{
         this.add(controlPanel, BorderLayout.SOUTH);
     }
 
-    // use boolean value to represent whether it is current player's turn
+    /**
+     *  use boolean value to represent whether it is current player's turn
+     * @param turn
+     */
     public void changeStatus(boolean turn) {
         if (turn) {
             statusLabel.setText("Your Turn");

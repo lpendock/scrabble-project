@@ -4,16 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
-
+/**
+ * Handles the alphabet bag logic
+ */
 public class AlphabetBag {
-	//ConcurrentHashmap to save word/meaning pairs for dictionary
+		//ConcurrentHashmap to save word/meaning pairs for dictionary
 		ConcurrentHashMap<String,Integer> map = new ConcurrentHashMap<String,Integer>();
+		
 		public AlphabetBag() {
 			createMap();
 			
 		}
 		
-		/** create hashmap with 10 tiles per alpabhet**/
+		/** 
+		 * create hashmap with 10 tiles per alpabhet.
+		 **/
 		private void createMap() {
 			map.put("a",10);
 			map.put("b",10);
@@ -43,13 +48,19 @@ public class AlphabetBag {
 			map.put("z",10);
 		}
 		
+		
+		/**
+		 * returns a random array of letters for the first drawing of lettering per player
+		 * @return
+		 */
 		public ArrayList<String> firstDraw() {
 			ArrayList<String> hand = new ArrayList<String>();
+			
 			//find a random key from map
 			List<String> keysAsArray = new ArrayList<String>(map.keySet());
 			Random r = new Random();
+			
 			//get random key(get an alphabet tile basically)
-	
 			for(int i=0;i<7;i++) {
 				String letter = keysAsArray.get(r.nextInt(keysAsArray.size()));
 				int num = map.get(letter);
@@ -62,16 +73,20 @@ public class AlphabetBag {
 			
 		}
 		
+		/**
+		 * gets a letter for replacement for the player
+		 * @return
+		 */
 		public String getLetter() {
+			
 			//find a random key from map
 			List<String> keysAsArray = new ArrayList<String>(map.keySet());
 			Random r = new Random();
-			//get random key(get an alphabet tile basically)
+			
 			String letter = keysAsArray.get(r.nextInt(keysAsArray.size()));
+			
 			// if the random letter chosen has no more left, try again until a letter with some left is found
-			//Nothing written yet about if no more letters(probably end game).
 			if (map.get(letter) == 0) {
-				System.out.println("No more of "+letter+" left!Finding another");
 				letter = getLetter();
 				
 			}

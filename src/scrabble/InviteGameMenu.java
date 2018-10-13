@@ -20,9 +20,11 @@ public class InviteGameMenu extends JFrame {
     private ArrayList<String> displayedLabels = new ArrayList<>();
 
 
+    // Init the invitation window
     public InviteGameMenu(Main main) {
         this.main = main;
         this.memberMenu = main.membersMenu;
+        this.setTitle("Invitations -- inviter is : " + main.getPlayer());
         parentPanel = new JPanel();
         parentPanel.setLayout(new BoxLayout(parentPanel, BoxLayout.Y_AXIS));
 
@@ -45,15 +47,17 @@ public class InviteGameMenu extends JFrame {
         });
         parentPanel.add(inviteBtn);
 
+
+        // by pressing this button, the game will start with players being invited
         JButton startButton = new JButton("Start Game");
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // todo: notify invitees to start game;
+               
                 inviteeList.add(main.getPlayer());
                 main.notifyGameStart();
 
-//                main.startGame();
+
                 main.membersMenu.getInviteGameMenu().setVisible(false);
             }
         });
@@ -61,6 +65,7 @@ public class InviteGameMenu extends JFrame {
         parentPanel.add(startButton);
 
 
+        // it will display names of those who pressed accept button
         JLabel inviteeName = new JLabel("Accepted invitees: ");
         inviteeName.setFont(new Font("Arial", Font.BOLD, 20));
         inviteeName.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -84,8 +89,10 @@ public class InviteGameMenu extends JFrame {
     }
 
 
+    // This function initialize list of names of who accepted invitation
     public void initInviteeLabels() {
         for (String invitee : inviteeList) {
+        	
             // if this name has been displayed then ignore it
             if (displayedLabels.contains(invitee)) continue;
             JLabel inviteeLabel = new JLabel(invitee);
@@ -101,7 +108,7 @@ public class InviteGameMenu extends JFrame {
     }
 
 
-
+    // filtered out those who available members to be invited
     private void initInvitationDialog() {
 
         System.out.println(main.getMemberList());
