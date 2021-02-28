@@ -1,6 +1,12 @@
 # scrabble
-- enter in the players textbox to enter number of players(the other one does nothing)
-- submit transitions to the actual board
-- the 'a' button can be pressed first to enter the letter a to any tile(other letters dont do anything)
-- after every letter entered on tile, dialog popup helps with scoring 
-- other minor things + code is still very messy
+
+# UPDATES
+1. working off zuodong branch
+2. has login port and ip address entry
+3. server only sees port entry(since we do not need to enter ip)
+4. simple error checking for port(port needs to be number)
+5. checks to make sure name not taken(can explain logic if yall want)
+6. simple adjacent checking for letters
+7. simple winner display on close(on program only)
+8. hopefully nothing is broken
+9.THINGS SHOULD BE FIXED NOW(new connection panel)

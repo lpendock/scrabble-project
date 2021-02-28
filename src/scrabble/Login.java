@@ -1,60 +1,87 @@
 package scrabble;
 
-import javax.swing.JPanel;
-import javax.swing.JRootPane;
+import javax.swing.*;
 
+import java.awt.EventQueue;
 import java.awt.FlowLayout;
-import javax.swing.JTextField;
-import javax.swing.JLabel;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.BorderLayout;
-import java.awt.Color;
+import javax.swing.JOptionPane;
 
-import javax.swing.JButton;
-import javax.swing.SwingConstants;
 
-import javax.swing.JMenuBar;
-
+/**
+ * Deal with login validation and communication
+ */
 public class Login extends JPanel {
-	private JTextField textField;
-	private JTextField textField_1;
-	private GUI_main gui;
+	private JTextField nameField;
+	private Main main;
 
 	/**
-	 * Create the panel.
-	 * @param gui_main 
+	 * Creates and handles the GUI and logic of the Login panel.
+	 * @param main
 	 */
-	public Login(GUI_main gui_main) {
+	public Login(Main main) {
 		setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		gui = gui_main;
-		JLabel lblNewLabel = new JLabel("Name");
-		add(lblNewLabel);
-		
-		textField = new JTextField();
-		add(textField);
-		textField.setColumns(10);
-		
-		JLabel lblNewLabel_1 = new JLabel("Players");
-		add(lblNewLabel_1);
-		
-		textField_1 = new JTextField();
-		add(textField_1);
-		textField_1.setColumns(10);
-		
-		JButton btnNewButton = new JButton("submit");
-		btnNewButton.setHorizontalAlignment(SwingConstants.LEADING);
-		add(btnNewButton);
-		  btnNewButton.addActionListener(new ActionListener() {
-	            @Override
-	            public void actionPerformed(ActionEvent e) {
-	            	gui.setPlayers(Integer.parseInt(textField_1.getText()));
-	            	gui.changePanel(2);
-	                
-	            }
-	        });
+		this.main = main;
+
+		JLabel playerNameLabel = new JLabel("Name");
+		add(playerNameLabel);
+
+		nameField = new JTextField();
+		add(nameField);
+		nameField.setColumns(10);
+
+		JButton nameSubmitButton = new JButton("submit");
+		nameSubmitButton.setHorizontalAlignment(SwingConstants.LEADING);
+		add(nameSubmitButton);
+		nameSubmitButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			
+				// displays a popup error if user attempts to submit an empty name field
+				if (nameField.getText().equals("") || nameField.getText().isEmpty()) {
+					JOptionPane.showMessageDialog(main, "Name should not be empty");
+					return;
+				}
+
+				
+				if (!main.isHost()) {
+					//tries to get an up-to-date list of all users from the server to check name entered.
+					main.client.sendToServer("getMemberList");
+					EventQueue.invokeLater(new Runnable() {
+						@Override
+						public void run() {
+							checkName();
+						}
+					});
+
+				} else {
+					
+					main.setPlayer(nameField.getText());
+					
+					main.initMemberMenu();
+				}
+			}
+		});
 
 	}
+
+
+	/**
+	 * checks if the name entered is already taken by another player
+	 */
+	private void checkName() {
+		//if take display popup to try another name
+		if( main.checkNameTaken(nameField.getText())) {
+			JOptionPane.showMessageDialog(main, "Name taken,choose another");
+		}
+		else {
+			//sets name as current player and tries to enter game lobby
+			main.setPlayer(nameField.getText());
+			main.notifyServerJoiningGame();
+		}
+	}
+
+
 
 }
